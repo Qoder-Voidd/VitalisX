@@ -1,6 +1,6 @@
 # Authentication Module
 
-Comprehensive authentication system for Stellara with Freighter wallet integration, JWT session management, API token support, and Redis-based rate limiting.
+Comprehensive authentication system for VitalisXwith Freighter wallet integration, JWT session management, API token support, and Redis-based rate limiting.
 
 ## Features
 
@@ -42,9 +42,11 @@ Comprehensive authentication system for Stellara with Freighter wallet integrati
 ### Public Endpoints
 
 #### POST /auth/nonce
+
 Request a nonce for wallet authentication.
 
 **Request:**
+
 ```json
 {
   "publicKey": "GABC123..."
@@ -52,6 +54,7 @@ Request a nonce for wallet authentication.
 ```
 
 **Response:**
+
 ```json
 {
   "nonce": "550e8400-e29b-41d4-a716-446655440000",
@@ -63,9 +66,11 @@ Request a nonce for wallet authentication.
 **Rate Limit:** 5 requests/minute per IP
 
 #### POST /auth/wallet/login
+
 Login with wallet signature.
 
 **Request:**
+
 ```json
 {
   "publicKey": "GABC123...",
@@ -75,6 +80,7 @@ Login with wallet signature.
 ```
 
 **Response:**
+
 ```json
 {
   "accessToken": "eyJhbGciOiJIUzI1NiIs...",
@@ -91,9 +97,11 @@ Login with wallet signature.
 **Rate Limit:** 5 requests/minute per IP
 
 #### POST /auth/refresh
+
 Refresh access token.
 
 **Request:**
+
 ```json
 {
   "refreshToken": "550e8400-e29b-41d4-a716-446655440001"
@@ -101,6 +109,7 @@ Refresh access token.
 ```
 
 **Response:**
+
 ```json
 {
   "accessToken": "eyJhbGciOiJIUzI1NiIs...",
@@ -113,14 +122,17 @@ Refresh access token.
 ### Protected Endpoints (JWT Required)
 
 #### GET /auth/me
+
 Get current user information.
 
 **Headers:**
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 **Response:**
+
 ```json
 {
   "id": "user-uuid",
@@ -140,14 +152,17 @@ Authorization: Bearer <access_token>
 ```
 
 #### POST /auth/logout
+
 Revoke all refresh tokens.
 
 **Headers:**
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 **Response:**
+
 ```json
 {
   "message": "Logged out successfully"
@@ -155,14 +170,17 @@ Authorization: Bearer <access_token>
 ```
 
 #### POST /auth/wallet/bind
+
 Bind additional wallet to account.
 
 **Headers:**
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 **Request:**
+
 ```json
 {
   "publicKey": "GXYZ789...",
@@ -172,6 +190,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Response:**
+
 ```json
 {
   "message": "Wallet bound successfully",
@@ -184,14 +203,17 @@ Authorization: Bearer <access_token>
 ```
 
 #### DELETE /auth/wallet/unbind
+
 Unbind wallet from account.
 
 **Headers:**
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 **Request:**
+
 ```json
 {
   "publicKey": "GXYZ789..."
@@ -199,6 +221,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Response:**
+
 ```json
 {
   "message": "Wallet unbound successfully"
@@ -208,14 +231,17 @@ Authorization: Bearer <access_token>
 ### API Token Endpoints (JWT Required)
 
 #### POST /auth/api-token
+
 Create API token for services.
 
 **Headers:**
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 **Request:**
+
 ```json
 {
   "name": "AI Service Token",
@@ -225,6 +251,7 @@ Authorization: Bearer <access_token>
 ```
 
 **Response:**
+
 ```json
 {
   "token": "stl_abc123...",
@@ -237,14 +264,17 @@ Authorization: Bearer <access_token>
 ```
 
 #### GET /auth/api-token
+
 List user's API tokens.
 
 **Headers:**
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 **Response:**
+
 ```json
 [
   {
@@ -260,14 +290,17 @@ Authorization: Bearer <access_token>
 ```
 
 #### DELETE /auth/api-token/:id
+
 Revoke API token.
 
 **Headers:**
+
 ```
 Authorization: Bearer <access_token>
 ```
 
 **Response:**
+
 ```json
 {
   "message": "API token revoked successfully"
@@ -309,15 +342,18 @@ async function loginWithFreighter() {
   const signedMessage = await signMessage(message);
 
   // 5. Login with signature
-  const loginResponse = await fetch('https://api.stellara.com/auth/wallet/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      publicKey,
-      signature: signedMessage,
-      nonce,
-    }),
-  });
+  const loginResponse = await fetch(
+    'https://api.stellara.com/auth/wallet/login',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        publicKey,
+        signature: signedMessage,
+        nonce,
+      }),
+    },
+  );
 
   const { accessToken, refreshToken, user } = await loginResponse.json();
 
@@ -337,7 +373,7 @@ async function makeAuthenticatedRequest(endpoint: string) {
 
   const response = await fetch(`https://api.stellara.com${endpoint}`, {
     headers: {
-      'Authorization': `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 
@@ -431,38 +467,41 @@ npm run test:cov
 
 ## Rate Limits
 
-| Endpoint | Limit | Window |
-|----------|-------|--------|
-| POST /auth/nonce | 5 requests | 60 seconds |
-| POST /auth/wallet/login | 5 requests | 60 seconds |
-| POST /auth/refresh | 10 requests | 60 seconds |
-| API endpoints | 100 requests | 60 seconds |
+| Endpoint                | Limit        | Window     |
+| ----------------------- | ------------ | ---------- |
+| POST /auth/nonce        | 5 requests   | 60 seconds |
+| POST /auth/wallet/login | 5 requests   | 60 seconds |
+| POST /auth/refresh      | 10 requests  | 60 seconds |
+| API endpoints           | 100 requests | 60 seconds |
 
 ## Error Codes
 
-| Status | Description |
-|--------|-------------|
-| 400 | Bad Request - Invalid input |
-| 401 | Unauthorized - Invalid token or signature |
-| 403 | Forbidden - Insufficient permissions |
-| 404 | Not Found - Resource not found |
-| 409 | Conflict - Wallet already bound |
-| 429 | Too Many Requests - Rate limit exceeded |
-| 500 | Internal Server Error |
+| Status | Description                               |
+| ------ | ----------------------------------------- |
+| 400    | Bad Request - Invalid input               |
+| 401    | Unauthorized - Invalid token or signature |
+| 403    | Forbidden - Insufficient permissions      |
+| 404    | Not Found - Resource not found            |
+| 409    | Conflict - Wallet already bound           |
+| 429    | Too Many Requests - Rate limit exceeded   |
+| 500    | Internal Server Error                     |
 
 ## Database Migrations
 
 Generate migration:
+
 ```bash
 npm run migration:generate -- src/database/migrations/CreateAuthTables
 ```
 
 Run migrations:
+
 ```bash
 npm run migration:run
 ```
 
 Revert migration:
+
 ```bash
 npm run migration:revert
 ```

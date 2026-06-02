@@ -1,79 +1,74 @@
-Contracts: SBT and Revocation
+# 📜 VitalisX Smart Contracts (Soroban)
 
-This folder contains example Solidity contracts and Circom circuits for the SBT identity feature.
+Soroban smart contracts powering VitalisX, a Web3 crypto learning and social trading platform built on the Stellar blockchain. These contracts provide decentralized services for education credentials, social rewards, messaging, and on-chain trading used by the VitalisX backend and frontend applications.
 
-Files added:
+This repository is intended for blockchain developers, protocol contributors, and the VitalisX platform infrastructure, serving as the trust layer for learning achievements, engagement rewards, user interactions, and decentralized trading features.
 
-- `contracts/SoulboundCredential.sol` — minimal non-transferable ERC-721 SBT implementation with issue/revoke/renew + expiration.
-- `contracts/RevocationRegistry.sol` — simple on-chain revocation registry.
-- `circuits/age_over_18.circom` — illustrative Circom circuit for proving age >= 18.
-- `circuits/accredited_investor.circom` — illustrative circuit for an accredited investor boolean claim.
+---
 
-Deployment and testing
-
-- Use `hardhat` or `foundry` to compile and deploy the Solidity contracts. Install `@openzeppelin/contracts`.
-- For circuits, compile with `circom` and use `snarkjs` for trusted setup and proof generation.
-  📜 Stellara AI Smart Contracts (Soroban)
-
-Soroban smart contracts powering Stellara AI, a Web3 crypto learning and social trading platform built on the Stellar blockchain. These contracts provide decentralized services for education credentials, social rewards, messaging, and on-chain trading used by the Stellara backend and frontend applications.
-
-This repository is intended for blockchain developers, protocol contributors, and the Stellara platform infrastructure, serving as the trust layer for learning achievements, engagement rewards, user interactions, and decentralized trading features.
-
-## 🆕 Upgradeability & Governance
+# 🆕 Upgradeability & Governance
 
 **NEW**: All contracts now feature explicit upgradeability with on-chain governance support.
 
-✅ **Multi-Signature Approval**: Upgrades require M-of-N approvals (e.g., 2-of-3)  
-✅ **Timelock Delays**: Prevents immediate execution (configurable: 1-24+ hours)  
-✅ **Role-Based Control**: Admin, Approver, and Executor roles prevent single points of failure  
-✅ **Transparent Governance**: All proposals tracked on-chain and auditable  
+✅ **Multi-Signature Approval**: Upgrades require M-of-N approvals (e.g., 2-of-3)
+✅ **Timelock Delays**: Prevents immediate execution (configurable: 1-24+ hours)
+✅ **Role-Based Control**: Admin, Approver, and Executor roles prevent single points of failure
+✅ **Transparent Governance**: All proposals tracked on-chain and auditable
 ✅ **Comprehensive Tests**: 10+ test cases covering all upgrade scenarios
 
-**Documentation**:
+## Documentation
 
-- [Upgradeability Design](./UPGRADEABILITY.md) - Complete architecture & security analysis
-- [Governance User Guide](./GOVERNANCE_GUIDE.md) - Step-by-step upgrade procedures
-- [Quick Reference](./QUICK_REFERENCE.md) - 30-second overview
-- [Implementation Summary](../IMPLEMENTATION_SUMMARY.md) - What was built
+* `UPGRADEABILITY.md` — Complete architecture & security analysis
+* `GOVERNANCE_GUIDE.md` — Step-by-step upgrade procedures
+* `QUICK_REFERENCE.md` — 30-second overview
+* `IMPLEMENTATION_SUMMARY.md` — What was built
 
-## Overview
+---
 
-This repository contains four core smart contracts that power the Stellara ecosystem:
+# Overview
 
-- **Trading Contract** (✨ **Now Upgradeable**): Decentralized exchange functionality for trading cryptocurrency pairs
-- **Academy Contract**: Credential management for course completion and learning achievements
-- **Social Rewards Contract**: Engagement tracking and reward distribution for community participation
-- **Messaging Contract**: Decentralized messaging between users with read status tracking
+This repository contains four core smart contracts that power the VitalisX ecosystem:
 
-## Project Structure
+* **Trading Contract** (✨ Upgradeable): Decentralized exchange functionality for trading cryptocurrency pairs
+* **Academy Contract**: Credential management for course completion and learning achievements
+* **Social Rewards Contract**: Engagement tracking and reward distribution for community participation
+* **Messaging Contract**: Decentralized messaging between users with read status tracking
 
-```
+---
+
+# Project Structure
+
+```txt
 ├── contracts/
 │   ├── trading/         # ✨ Upgradeable DEX trading contract
 │   ├── academy/         # ✨ NEW: Academy vesting & rewards contract
-│   │   ├── VESTING_DESIGN.md           # Vesting architecture & design
-│   │   ├── VESTING_QUICK_REFERENCE.md  # Quick reference guide
-│   │   ├── INTEGRATION_GUIDE.md        # Backend/frontend integration
-│   │   ├── DELIVERY_SUMMARY.md         # Project completion summary
-│   │   └── README.md                   # Academy contract overview
+│   │   ├── VESTING_DESIGN.md
+│   │   ├── VESTING_QUICK_REFERENCE.md
+│   │   ├── INTEGRATION_GUIDE.md
+│   │   ├── DELIVERY_SUMMARY.md
+│   │   └── README.md
 │   ├── social_rewards/  # Engagement rewards contract
 │   └── messaging/       # P2P messaging contract
-├── shared/              # ✨ NEW: Shared governance module (reusable)
-│   └── src/governance.rs # Multi-sig upgrade governance
-├── Cargo.toml          # Workspace configuration
-├── UPGRADEABILITY.md   # Upgradeability design documentation
-├── GOVERNANCE_GUIDE.md # Step-by-step governance procedures
-├── QUICK_REFERENCE.md  # Quick reference card
-└── README.md           # This file
+├── shared/
+│   └── src/governance.rs
+├── Cargo.toml
+├── UPGRADEABILITY.md
+├── GOVERNANCE_GUIDE.md
+├── QUICK_REFERENCE.md
+└── README.md
 ```
 
-## Prerequisites
+---
 
-- Rust 1.70 or later (Install via https://rustup.rs/ - required for running `cargo test`)
-- Soroban SDK 20.5.0
-- Stellar CLI tools
+# Prerequisites
 
-## Building
+* Rust 1.70 or later
+* Soroban SDK 20.5.0
+* Stellar CLI tools
+
+---
+
+# Building
 
 ```bash
 # Build all contracts
@@ -84,107 +79,95 @@ cd contracts/trading
 cargo build --release --target wasm32-unknown-unknown
 ```
 
-## Testing
+---
+
+# Testing
 
 ```bash
-# Run all tests (including new governance tests)
+# Run all tests
 cargo test --all
-
-# On Windows (PowerShell), you can use the provided script:
-# .\test.ps1
 
 # Run specific contract tests
 cd contracts/trading
-cargo test  # Includes 10+ upgradeability tests
+cargo test
 ```
 
-## Governance & Upgradeability
+---
 
-### Quick Start
+# Governance & Upgradeability
 
-All contracts now support governance-controlled upgrades:
+## Quick Start
+
+All contracts support governance-controlled upgrades:
 
 ```bash
-# 1. Initialize with governance roles
 stellar contract invoke --id $CONTRACT_ID --source admin -- \
   init --admin $ADMIN --approvers [$A1,$A2,$A3] --executor $EXECUTOR
+```
 
-# 2. Propose an upgrade
+```bash
 stellar contract invoke --id $CONTRACT_ID --source admin -- \
   propose_upgrade --new_contract_hash $HASH --description "..." \
   --approvers [$A1,$A2,$A3] --approval_threshold 2 --timelock_delay 3600
+```
 
-# 3. Approvers vote (need 2 of 3)
+```bash
 stellar contract invoke --id $CONTRACT_ID --source $APPROVER1 -- \
   approve_upgrade --proposal_id 1
+```
 
-# 4. Wait for timelock, then execute
+```bash
 stellar contract invoke --id $CONTRACT_ID --source $EXECUTOR -- \
   execute_upgrade --proposal_id 1
 ```
 
-### Governance Features
+---
 
-- ✅ **Multi-Sig Approval** (M-of-N): e.g., 2-of-3 signers required
-- ✅ **Timelock Delays**: Safety period (1-24+ hours) before execution
-- ✅ **Role-Based Control**: Admin, Approver, Executor roles
-- ✅ **Transparent**: All proposals on-chain and queryable
-- ✅ **Circuit Breakers**: Rejection and cancellation mechanisms
+# Governance Features
 
-### Documentation
+* ✅ Multi-Sig Approval (M-of-N)
+* ✅ Timelock Delays
+* ✅ Role-Based Access Control
+* ✅ Transparent Governance
+* ✅ Circuit Breakers & Cancellation Support
 
-- **[UPGRADEABILITY.md](./UPGRADEABILITY.md)**: 10+ sections covering:
-  - Architecture with diagrams
-  - Security safeguards explained
-  - Complete governance process flow
-  - Smart contract implementation details
-  - Testing & validation strategy
-- **[GOVERNANCE_GUIDE.md](./GOVERNANCE_GUIDE.md)**: Practical guide with:
-  - Step-by-step CLI examples
-  - Multi-signature approval workflow
-  - Timelock management
-  - Error handling & troubleshooting
-  - Emergency procedures
-- **[QUICK_REFERENCE.md](./QUICK_REFERENCE.md)**: Cheat sheet with:
-  - 30-second overview
-  - Function reference
-  - Common scenarios
-  - Error codes
+---
 
-## Deployment
+# Deployment
 
-### Testnet Deployment
+## Testnet Deployment
 
-1. Set up your Stellar CLI:
+### Configure Network
 
 ```bash
 stellar config network set testnet https://soroban-testnet.stellar.org
 ```
 
-2. Create a network configuration:
+### Configure RPC & Passphrase
 
 ```bash
 stellar config set --scope global RPC_URL https://soroban-testnet.stellar.org
 stellar config set --scope global NETWORK_PASSPHRASE "Test SDF Network ; September 2015"
 ```
 
-3. Deploy contracts:
+### Build Contracts
 
 ```bash
-# Build WASM binaries
 cargo build --release --target wasm32-unknown-unknown
+```
 
-# Deploy trading contract
+### Deploy Trading Contract
+
+```bash
 stellar contract deploy \
   --wasm target/wasm32-unknown-unknown/release/trading_contract.wasm \
   --source account-name \
   --network testnet
 ```
 
-4. Initialize contracts after deployment:
+### Initialize Contract
 
 ```bash
-# Initialize trading contract with governance
 stellar contract invoke \
   --id CONTRACT_ADDRESS \
   --source account-name \
@@ -195,102 +178,94 @@ stellar contract invoke \
   --executor "$EXECUTOR_ADDRESS"
 ```
 
-## Contract Descriptions
+---
 
-### Trading Contract ✨ (Upgradeable)
+# Contract Descriptions
+
+## Trading Contract ✨ (Upgradeable)
 
 Manages decentralized trading operations with governance support.
 
-**Key Functions:**
+### Key Functions
 
-- `init()`: Initialize with governance roles
-- `trade()`: Execute a trade on specified pair with fee collection
-- `get_stats()`: Retrieve trading statistics
-- `propose_upgrade()`: Propose contract upgrade
-- `approve_upgrade()`: Approve pending upgrade
-- `execute_upgrade()`: Execute approved upgrade
-- `pause()` / `unpause()`: Emergency pause functionality
+* `init()`
+* `trade()`
+* `get_stats()`
+* `propose_upgrade()`
+* `approve_upgrade()`
+* `execute_upgrade()`
+* `pause()` / `unpause()`
 
-**Governance Functions:**
+---
 
-- `propose_upgrade()`: Create upgrade proposal (Admin)
-- `approve_upgrade()`: Approve proposal (Approver)
-- `reject_upgrade()`: Reject proposal (Approver)
-- `execute_upgrade()`: Execute approved upgrade (Executor)
-- `cancel_upgrade()`: Cancel proposal (Admin)
+## Academy Contract
 
-### Academy Contract (✨ NEW: Vesting & Rewards)
+Manages educational credentials, achievements, and vesting rewards.
 
-Manages educational credentials, achievements, and secure vesting of academy rewards.
+### Features
 
-**Two Core Features:**
+#### Vesting Module
 
-1. **Vesting Module** (NEW) - Time-based vesting of tokens/badges
-   - `grant_vesting()`: Create vesting schedule (admin only)
-   - `claim()`: Atomic claim of vested tokens (single-claim semantics)
-   - `revoke()`: Revoke grant with timelock protection
-   - `get_vesting()`: Query vesting schedule
-   - `get_vested_amount()`: Calculate current vested amount
+* `grant_vesting()`
+* `claim()`
+* `revoke()`
+* `get_vesting()`
+* `get_vested_amount()`
 
-2. **Credentials** - Educational achievements
-   - `issue_credential()`: Award credential to user (admin only)
-   - `get_user_credentials()`: Retrieve user's credentials
-   - `verify_credential()`: Verify a credential exists
+#### Credential Management
 
-**Vesting Features:**
+* `issue_credential()`
+* `get_user_credentials()`
+* `verify_credential()`
 
-- ✅ Time-based vesting with cliff periods
-- ✅ Linear vesting after cliff
-- ✅ Single-claim semantics (prevents double-spend)
-- ✅ Governance revocation with 1+ hour timelock
-- ✅ Event emission for off-chain indexing
-- ✅ 18+ comprehensive tests
+### Vesting Features
 
-**Documentation:**
+✅ Cliff periods
+✅ Linear vesting
+✅ Single-claim semantics
+✅ Governance revocation
+✅ Event emission
+✅ Comprehensive tests
 
-- [VESTING_DESIGN.md](./contracts/academy/VESTING_DESIGN.md) - Complete technical design
-- [VESTING_QUICK_REFERENCE.md](./contracts/academy/VESTING_QUICK_REFERENCE.md) - Quick start
-- [INTEGRATION_GUIDE.md](./contracts/academy/INTEGRATION_GUIDE.md) - Integration examples
-- [README.md](./contracts/academy/README.md) - Academy contract overview
+---
 
-### Social Rewards Contract
+## Social Rewards Contract
 
 Tracks engagement and distributes rewards.
 
-**Key Functions:**
+### Key Functions
 
-- `init()`: Initialize the contract
-- `record_engagement()`: Record user engagement activity
-- `get_user_rewards()`: Get user's reward balance and tier
-- `get_engagement_history()`: Get user's engagement history
-- `claim_tier_reward()`: Claim rewards based on tier
+* `init()`
+* `record_engagement()`
+* `get_user_rewards()`
+* `get_engagement_history()`
+* `claim_tier_reward()`
 
-### Messaging Contract
+---
 
-Enables decentralized P2P messaging.
+## Messaging Contract
 
-**Key Functions:**
+Enables decentralized peer-to-peer messaging.
 
-- `init()`: Initialize the contract
-- `send_message()`: Send message to recipient
-- `mark_as_read()`: Mark message as read
-- `get_messages()`: Get user's messages (received/sent)
-- `get_unread_count()`: Get count of unread messages
-- `get_stats()`: Retrieve messaging statistics
+### Key Functions
 
-## Environment Variables
+* `init()`
+* `send_message()`
+* `mark_as_read()`
+* `get_messages()`
+* `get_unread_count()`
+* `get_stats()`
 
-For deployment, set these environment variables:
+---
+
+# Environment Variables
 
 ```bash
-# Stellar account secret key
 export STELLAR_SECRET_KEY="your-secret-key"
 
-# Network configuration (testnet by default)
 export SOROBAN_NETWORK="testnet"
 export SOROBAN_RPC_URL="https://soroban-testnet.stellar.org"
 
-# Governance configuration
 export ADMIN_ADDRESS="G..."
 export APPROVER_1="G..."
 export APPROVER_2="G..."
@@ -298,44 +273,58 @@ export APPROVER_3="G..."
 export EXECUTOR_ADDRESS="G..."
 ```
 
-## Security Considerations
+---
 
-- ✅ All contracts implement authentication via `require_auth()`
-- ✅ Admin functions protected with role verification
-- ✅ Contract storage uses instance storage for state management
-- ✅ **NEW**: Upgradeable via multi-sig governance (prevents rogue upgrades)
-- ✅ **NEW**: Timelock delays provide reaction window (1-24+ hours)
-- ✅ **NEW**: Transparent proposal system (all changes auditable)
+# Security Considerations
 
-## Ecosystem Repositories
-
-🌐 **Frontend** (Next.js): https://github.com/Dev-shamoo/Stellara_Ai  
-⚙ **Backend** (NestJS): https://github.com/shamoo53/Stellara_Ai_backend  
-⭐ **Stellar Docs**: https://developers.stellar.org/docs/smart-contracts/soroban/
-
-## Contributing
-
-🤝 Contributing:
-
-- Fork the repository
-- Create a feature branch
-- Submit a pull request
-
-Please ensure all tests pass and documentation is updated with your changes.
+✅ Authentication via `require_auth()`
+✅ Role-protected admin functions
+✅ Safe instance storage management
+✅ Governance-based upgrades
+✅ Timelock protection
+✅ Transparent proposal tracking
 
 ---
 
-**Last Updated**: January 22, 2026  
-**Version**: 2.0 (with Upgradeability & Governance)  
-**Status**: Production Ready
-Commit your changes
-git pull latest changes to avoid conflicts
-Submit a pull request
-Issues and feature requests are welcome.
+# Ecosystem Repositories
 
-When adding new features:
+🌐 Frontend (Next.js): https://github.com/Dev-shamoo/VitalisX
+⚙ Backend (NestJS): https://github.com/shamoo53/VitalisX_backend
+⭐ Stellar Docs: https://developers.stellar.org/docs/smart-contracts/soroban/
+
+---
+
+# Contributing
+
+🤝 Contributions are welcome.
+
+## Workflow
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Pull latest changes to avoid conflicts
+5. Submit a pull request
+
+Please ensure:
+
+* All tests pass
+* Documentation is updated
+* Code follows project standards
+
+---
+
+# Adding New Features
+
+When adding new functionality:
 
 1. Create a new function in the appropriate contract
 2. Add corresponding tests
-3. Update this README with new function documentation
+3. Update this README documentation
 4. Ensure all tests pass before submitting
+
+---
+
+**Last Updated:** January 22, 2026
+**Version:** 2.0 (Upgradeability & Governance)
+**Status:** Production Ready

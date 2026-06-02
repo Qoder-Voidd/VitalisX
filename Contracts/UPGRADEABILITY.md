@@ -1,14 +1,14 @@
-# Stellara Smart Contracts - Upgradeability Design
+# VitalisXSmart Contracts - Upgradeability Design
 
 ## Overview
 
-This document defines the explicit upgradeability pattern for Stellara smart contracts on Soroban/Stellar. The design prioritizes security, transparency, and decentralized governance while preventing rogue upgrades through multi-signature approval and timelock mechanisms.
+This document defines the explicit upgradeability pattern for VitalisXsmart contracts on Soroban/Stellar. The design prioritizes security, transparency, and decentralized governance while preventing rogue upgrades through multi-signature approval and timelock mechanisms.
 
 ## 1. Upgradeability Architecture
 
 ### 1.1 Design Pattern: Governance-Controlled Upgrade
 
-Stellara uses a **decentralized governance upgrade model** rather than a traditional proxy pattern. This approach:
+VitalisXuses a **decentralized governance upgrade model** rather than a traditional proxy pattern. This approach:
 
 - **Eliminates centralized admin risk**: Upgrades require multi-signature approval
 - **Provides transparency**: All upgrade proposals are on-chain and auditable
@@ -28,7 +28,7 @@ Since Soroban contracts are immutable once deployed:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│              Stellara Governance System                  │
+│              VitalisXGovernance System                  │
 └─────────────────────────────────────────────────────────┘
 
 User/Admin
@@ -104,6 +104,7 @@ Three distinct governance roles prevent single-point-of-failure:
 ```
 
 **Benefits:**
+
 - **Separation of Concerns**: No single actor can execute an upgrade
 - **Distributed Trust**: Requires cooperation between multiple parties
 - **Reduced Attack Surface**: Each role has minimal necessary permissions
@@ -127,6 +128,7 @@ Scenarios:
 ```
 
 **Implementation Details:**
+
 - Duplicate approvals are prevented (one signature per approver)
 - Any approver can reject, removing the proposal from consideration
 - Approval threshold is validated during proposal creation
@@ -160,6 +162,7 @@ Benefit: Users have time to:
 ```
 
 **Configurable Delays:**
+
 - Minimum timelock: 1 hour (3,600 seconds)
 - Standard timelock: 4-24 hours
 - Maximum timelock: 7-30 days (depends on governance parameters)
@@ -190,6 +193,7 @@ Proposals progress through well-defined states:
 ```
 
 **State Rules:**
+
 - Only PENDING proposals can be approved/rejected
 - Only APPROVED proposals can be executed
 - Only proposals created by admin can be cancelled
@@ -309,6 +313,7 @@ pub enum GovernanceRole {
 ### 4.2 Key Functions
 
 #### propose_upgrade()
+
 ```rust
 pub fn propose_upgrade(
     new_contract_hash: Symbol,
@@ -320,16 +325,19 @@ pub fn propose_upgrade(
 ```
 
 **Requirements:**
+
 - Caller must be Admin
 - Threshold must be > 0 and ≤ approvers.len()
 - Returns proposal_id
 
 **Safeguards:**
+
 - Validates approver count
 - Checks threshold consistency
 - Enforces timelock minimum
 
 #### approve_upgrade()
+
 ```rust
 pub fn approve_upgrade(
     proposal_id: u64,
@@ -338,15 +346,18 @@ pub fn approve_upgrade(
 ```
 
 **Requirements:**
+
 - Caller must be Approver role
 - Caller must be in approvers list
 - Proposal status must be Pending
 - Cannot approve twice
 
 **Automatic Transitions:**
+
 - When approvals_count >= threshold → Status = Approved
 
 #### execute_upgrade()
+
 ```rust
 pub fn execute_upgrade(
     proposal_id: u64,
@@ -355,11 +366,13 @@ pub fn execute_upgrade(
 ```
 
 **Requirements:**
+
 - Caller must be Executor role
 - Proposal status must be Approved
 - Current timestamp ≥ execution_time
 
 **Effects:**
+
 - Sets status to Executed
 - Sets executed flag to true
 - Locks proposal (no further changes)
@@ -418,14 +431,14 @@ Time Requirements:
 
 ### 6.1 Attack Vectors & Mitigations
 
-| Attack Vector | Mitigation |
-|---------------|-----------|
-| Rogue admin proposal | Requires multi-sig approval |
-| Sybil attack on approvers | Whitelist-based approver list |
-| Timelock bypass | Enforced delay in contract logic |
-| Duplicate approval | Tracked in on-chain storage |
-| Unauthorized execution | Role-based access control |
-| Front-running proposal | Transparent on-chain proposal |
+| Attack Vector             | Mitigation                       |
+| ------------------------- | -------------------------------- |
+| Rogue admin proposal      | Requires multi-sig approval      |
+| Sybil attack on approvers | Whitelist-based approver list    |
+| Timelock bypass           | Enforced delay in contract logic |
+| Duplicate approval        | Tracked in on-chain storage      |
+| Unauthorized execution    | Role-based access control        |
+| Front-running proposal    | Transparent on-chain proposal    |
 | State loss during upgrade | Explicit data migration handlers |
 
 ### 6.2 Governance Best Practices
@@ -433,7 +446,7 @@ Time Requirements:
 1. **Multi-Sig Signers**: Use 3-of-5 or higher for mainnet
 2. **Geographic Distribution**: Signers in different jurisdictions
 3. **Key Management**: Hardware wallets for approval keys
-4. **Timelock Duration**: 
+4. **Timelock Duration**:
    - Testnet: 1 hour minimum
    - Mainnet: 24 hours minimum
 5. **Communication**: Announce upgrades 48 hours in advance
@@ -442,12 +455,14 @@ Time Requirements:
 ### 6.3 Threat Model
 
 **In Scope (This design prevents):**
+
 - Single admin rogue upgrade ✓
 - Unilateral governance changes ✓
 - Undetected malicious code deployment ✓
 - Signer collusion (up to threshold-1) ✓
 
 **Out of Scope (Require external measures):**
+
 - All N approvers colluding (governance failure)
 - Soroban/Stellar network compromise
 - Contract bug in shared library
@@ -468,6 +483,7 @@ pub fn get_version(env: Env) -> u32 {
 ```
 
 **Version Schema:**
+
 - V1: Initial release
 - V2: Upgrade with new features
 - V3+: Subsequent improvements
@@ -555,11 +571,13 @@ Before deploying to mainnet:
 ## 10. References
 
 ### Soroban/Stellar Documentation
+
 - [Soroban Smart Contracts](https://developers.stellar.org/docs/smart-contracts)
 - [Access Control Patterns](https://developers.stellar.org/docs/learn/storing-data)
 - [Contract Testing](https://developers.stellar.org/docs/build/smart-contracts/testing)
 
 ### Smart Contract Security
+
 - [OpenZeppelin Governance](https://docs.openzeppelin.com/contracts/latest/governance)
 - [Multi-Sig Wallets](https://blog.gnosis.pm/multisig-wallets)
 - [Timelock Mechanisms](https://eips.ethereum.org/EIPS/eip-1014)

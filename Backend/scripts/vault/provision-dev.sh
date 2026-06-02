@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Vault Development Secrets Provisioning Script
-# This script initializes Vault with development secrets for the Stellara project
+# This script initializes Vault with development secrets for the VitalisXproject
 
 set -e
 

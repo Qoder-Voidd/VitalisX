@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-/// LP position CRUD for the Stellara Advanced AMM.
+/// LP position CRUD for the VitalisXAdvanced AMM.
 ///
 /// Each position is uniquely identified by a monotonically-increasing u64 id.
 /// Positions track:

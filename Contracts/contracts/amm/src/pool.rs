@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-/// Pool state, tick math, and swap math for the Stellara Advanced AMM.
+/// Pool state, tick math, and swap math for the VitalisXAdvanced AMM.
 ///
 /// Concentrated liquidity model:
 ///   - Liquidity is only active when current_tick ∈ [tick_lower, tick_upper).

@@ -12,7 +12,7 @@ This module implements a comprehensive Redis-based caching layer for market data
 ✅ **Cache Metrics** with hit/miss tracking  
 ✅ **Event-Based Invalidation** on asset updates  
 ✅ **Comprehensive Testing** with unit and integration tests  
-✅ **Swagger API Documentation** for all endpoints  
+✅ **Swagger API Documentation** for all endpoints
 
 ## Architecture
 
@@ -37,11 +37,13 @@ This module implements a comprehensive Redis-based caching layer for market data
 ### Market Data
 
 #### Get Market Snapshot
+
 ```http
 GET /market-data/snapshot?assets=XLM,USDC&bypassCache=false
 ```
 
 **Response:**
+
 ```json
 {
   "assets": [
@@ -63,11 +65,13 @@ GET /market-data/snapshot?assets=XLM,USDC&bypassCache=false
 ### News
 
 #### Get Crypto News
+
 ```http
 GET /market-data/news?category=stellar&limit=20&bypassCache=false
 ```
 
 **Response:**
+
 ```json
 {
   "articles": [
@@ -91,11 +95,13 @@ GET /market-data/news?category=stellar&limit=20&bypassCache=false
 ### Cache Statistics
 
 #### Get Overall Cache Stats
+
 ```http
 GET /market-data/cache/stats
 ```
 
 **Response:**
+
 ```json
 {
   "totalHits": 150,
@@ -116,11 +122,13 @@ GET /market-data/cache/stats
 ```
 
 #### Get Market Cache Stats
+
 ```http
 GET /market-data/cache/stats/market
 ```
 
 #### Get News Cache Stats
+
 ```http
 GET /market-data/cache/stats/news
 ```
@@ -128,6 +136,7 @@ GET /market-data/cache/stats/news
 ### Cache Invalidation
 
 #### Invalidate Cache by Namespace
+
 ```http
 POST /market-data/cache/invalidate
 Content-Type: application/json
@@ -138,6 +147,7 @@ Content-Type: application/json
 ```
 
 #### Invalidate Cache by Pattern
+
 ```http
 POST /market-data/cache/invalidate
 Content-Type: application/json
@@ -148,11 +158,13 @@ Content-Type: application/json
 ```
 
 #### Invalidate Market Data Cache
+
 ```http
 POST /market-data/cache/invalidate/market
 ```
 
 #### Invalidate News Cache
+
 ```http
 POST /market-data/cache/invalidate/news
 ```
@@ -172,10 +184,10 @@ TTLs are configured in `cache-config.types.ts`:
 
 ```typescript
 export const CACHE_TTL_CONFIG = {
-  MARKET_SNAPSHOT: 300,  // 5 minutes
-  NEWS: 900,             // 15 minutes
-  ASSET_DATA: 600,       // 10 minutes
-  PRICE_DATA: 60,        // 1 minute
+  MARKET_SNAPSHOT: 300, // 5 minutes
+  NEWS: 900, // 15 minutes
+  ASSET_DATA: 600, // 10 minutes
+  PRICE_DATA: 60, // 1 minute
 };
 ```
 
@@ -192,11 +204,13 @@ The system automatically invalidates cache when:
 ### Unit Tests
 
 Run unit tests for cache service:
+
 ```bash
 npm test market-cache.service.spec.ts
 ```
 
 Tests cover:
+
 - Cache hit/miss behaviors
 - TTL management
 - Invalidation operations
@@ -206,11 +220,13 @@ Tests cover:
 ### Integration Tests
 
 Run integration tests:
+
 ```bash
 npm test market-data.integration.spec.ts
 ```
 
 Tests cover:
+
 - Full HTTP request/response flow
 - Cache behavior validation
 - Invalidation workflows
@@ -270,6 +286,7 @@ curl -X POST http://localhost:3000/market-data/cache/invalidate/market
 ### Logging
 
 The module logs the following events:
+
 - Cache hits/misses (debug level)
 - Cache invalidation operations
 - API fetch operations
@@ -295,7 +312,7 @@ await cacheService.set(
   key,
   data,
   CacheNamespace.MARKET_SNAPSHOT,
-  600 // Custom 10-minute TTL
+  600, // Custom 10-minute TTL
 );
 ```
 
@@ -319,11 +336,13 @@ await cacheService.set(
 The mock implementations should be replaced with real API integrations:
 
 ### Market Data APIs
+
 - **Stellar Expert API** - Asset data and statistics
 - **Horizon API** - Real-time Stellar network data
 - **CoinGecko API** - Price and market cap data
 
 ### News APIs
+
 - **CryptoPanic** - Crypto news aggregator
 - **CoinTelegraph API** - Crypto news
 - **Custom RSS feeds** - Stellar ecosystem updates
@@ -380,4 +399,4 @@ src/market-data/
 
 ## License
 
-This implementation is part of the Stellara Contracts backend service.
+This implementation is part of the VitalisXContracts backend service.

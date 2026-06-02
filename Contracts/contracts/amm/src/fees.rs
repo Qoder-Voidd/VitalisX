@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-/// Dynamic fee computation for the Stellara Advanced AMM.
+/// Dynamic fee computation for the VitalisXAdvanced AMM.
 ///
 /// # Design
 ///

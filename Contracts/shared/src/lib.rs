@@ -1,5 +1,5 @@
 #![no_std]
-//! Shared utilities and types for Stellara contracts
+//! Shared utilities and types for VitalisXcontracts
 
 use soroban_sdk::contracttype;
 

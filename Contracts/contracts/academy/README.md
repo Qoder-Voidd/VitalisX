@@ -22,6 +22,7 @@ The **Academy Vesting Contract** is a Soroban smart contract that manages time-b
 ## 🚀 Quick Start
 
 ### Initialize Contract
+
 ```rust
 AcademyVestingContract::init(
     env,
@@ -32,6 +33,7 @@ AcademyVestingContract::init(
 ```
 
 ### Grant Vesting
+
 ```rust
 let grant_id = AcademyVestingContract::grant_vesting(
     env,
@@ -45,6 +47,7 @@ let grant_id = AcademyVestingContract::grant_vesting(
 ```
 
 ### Claim Tokens
+
 ```rust
 let claimed = AcademyVestingContract::claim(
     env,
@@ -58,30 +61,35 @@ let claimed = AcademyVestingContract::claim(
 ## 📋 Features
 
 ### Time-Based Vesting
+
 - Configurable start time, cliff, and duration
 - Linear vesting after cliff period
 - Calculate vested amount at any time
 - Support for any token amount
 
 ### Single-Claim Semantics
+
 - Atomic claim operation (all-or-nothing)
 - Prevents double-spends and replay attacks
 - One claim per grant (no refunds)
 - Clear error on re-attempt (AlreadyClaimed)
 
 ### Governance Revocation
+
 - Admin-only revocation
 - Minimum 1-hour timelock delay
 - Cannot revoke claimed grants
 - Clear revocation audit trail
 
 ### Event Emission
+
 - GrantEvent: When vesting schedule created
 - ClaimEvent: When tokens claimed
 - RevokeEvent: When grant revoked
 - Perfect for off-chain indexing
 
 ### Security
+
 - Role-based authorization (Admin, Beneficiary)
 - Input validation (cliff ≤ duration, amount > 0)
 - Signature requirements for all state changes
@@ -92,6 +100,7 @@ let claimed = AcademyVestingContract::claim(
 ## 🏗️ Architecture
 
 ### Data Structure
+
 ```rust
 struct VestingSchedule {
     beneficiary: Address,    // Who receives tokens
@@ -106,6 +115,7 @@ struct VestingSchedule {
 ```
 
 ### Timeline
+
 ```
 start_time ──cliff──> start_time+cliff ──linear vesting──> start_time+duration
 
@@ -116,6 +126,7 @@ Full Duration:   100% vested
 ```
 
 ### Vesting Formula
+
 ```
 vested_amount = amount × (elapsed_time / remaining_duration)
   where:
@@ -130,40 +141,45 @@ vested_amount = amount × (elapsed_time / remaining_duration)
 ### 5-Layer Security Model
 
 **Layer 1: Role-Based Authorization**
+
 - Admin: grant, revoke
 - Beneficiary: claim (with signature)
 - Public: query
 
 **Layer 2: Timelock Delays**
+
 - Minimum 1-hour revocation delay
 - Prevents surprise revocations
 - User reaction window
 
 **Layer 3: Atomic Operations**
+
 - Claim is atomic (succeed or fail completely)
 - Single-claim flag prevents replay
 - No partial state changes
 
 **Layer 4: State Machine**
+
 - Clear vesting lifecycle
 - Status transitions validated
 - No invalid states possible
 
 **Layer 5: Event Transparency**
+
 - All actions emit events
 - Off-chain indexing enabled
 - Immutable audit trail
 
 ### Attack Prevention
 
-| Attack | Prevention |
-|--------|-----------|
-| Double-Claim | Atomic `claimed` flag |
-| Replay | Single-claim semantics + signature |
-| Unauthorized Claim | Beneficiary verification |
-| Unauthorized Grant | Admin verification |
-| Surprise Revoke | Timelock mechanism |
-| Balance Drain | Balance verification before transfer |
+| Attack             | Prevention                           |
+| ------------------ | ------------------------------------ |
+| Double-Claim       | Atomic `claimed` flag                |
+| Replay             | Single-claim semantics + signature   |
+| Unauthorized Claim | Beneficiary verification             |
+| Unauthorized Grant | Admin verification                   |
+| Surprise Revoke    | Timelock mechanism                   |
+| Balance Drain      | Balance verification before transfer |
 
 ---
 
@@ -211,6 +227,7 @@ Integration Test (1)
 ```
 
 ### Running Tests
+
 ```bash
 cd Contracts/contracts/academy
 cargo test --lib
@@ -222,14 +239,14 @@ cargo test --lib
 
 ## 📚 Documentation
 
-| Document | Purpose | Audience |
-|----------|---------|----------|
-| [VESTING_DESIGN.md](./VESTING_DESIGN.md) | Complete technical design & architecture | Developers, Auditors |
-| [VESTING_QUICK_REFERENCE.md](./VESTING_QUICK_REFERENCE.md) | 5-minute quick start & cheat sheet | Developers, DevOps |
-| [INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md) | Backend/frontend integration examples | Full-Stack Engineers |
-| [src/vesting.rs](./src/vesting.rs) | Smart contract implementation (600+ lines) | Developers |
-| [src/test.rs](./src/test.rs) | Comprehensive test suite (400+ lines) | QA, Developers |
-| [Cargo.toml](./Cargo.toml) | Rust package configuration | DevOps, Build |
+| Document                                                   | Purpose                                    | Audience             |
+| ---------------------------------------------------------- | ------------------------------------------ | -------------------- |
+| [VESTING_DESIGN.md](./VESTING_DESIGN.md)                   | Complete technical design & architecture   | Developers, Auditors |
+| [VESTING_QUICK_REFERENCE.md](./VESTING_QUICK_REFERENCE.md) | 5-minute quick start & cheat sheet         | Developers, DevOps   |
+| [INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md)             | Backend/frontend integration examples      | Full-Stack Engineers |
+| [src/vesting.rs](./src/vesting.rs)                         | Smart contract implementation (600+ lines) | Developers           |
+| [src/test.rs](./src/test.rs)                               | Comprehensive test suite (400+ lines)      | QA, Developers       |
+| [Cargo.toml](./Cargo.toml)                                 | Rust package configuration                 | DevOps, Build        |
 
 ---
 
@@ -238,52 +255,61 @@ cargo test --lib
 ### Core Functions
 
 #### `init(env, admin, reward_token, governance)`
+
 Initialize contract with admin and token addresses.
 
 #### `grant_vesting(env, admin, beneficiary, amount, start_time, cliff, duration)`
+
 Create vesting schedule (admin only).
 
 #### `claim(env, grant_id, beneficiary)`
+
 Claim vested tokens (atomic, single-claim).
 
 #### `revoke(env, grant_id, admin, revoke_delay)`
+
 Revoke grant with timelock (admin only).
 
 #### `get_vesting(env, grant_id)`
+
 Query vesting schedule details.
 
 #### `get_vested_amount(env, grant_id)`
+
 Calculate current vested amount.
 
 #### `get_info(env)`
+
 Get contract info (admin, token, governance).
 
 ---
 
 ## ⚠️ Error Codes
 
-| Error | Code | When |
-|-------|------|------|
-| `Unauthorized` | 4001 | Not admin/beneficiary |
-| `NotVested` | 4002 | Cliff not passed |
-| `AlreadyClaimed` | 4003 | Already claimed once |
-| `InvalidSchedule` | 4004 | Bad parameters |
-| `InsufficientBalance` | 4005 | Not enough tokens |
-| `GrantNotFound` | 4006 | ID doesn't exist |
-| `Revoked` | 4007 | Grant revoked |
-| `InvalidTimelock` | 4008 | Delay < 1 hour |
-| `NotEnoughTimeForRevoke` | 4009 | Timelock not elapsed |
+| Error                    | Code | When                  |
+| ------------------------ | ---- | --------------------- |
+| `Unauthorized`           | 4001 | Not admin/beneficiary |
+| `NotVested`              | 4002 | Cliff not passed      |
+| `AlreadyClaimed`         | 4003 | Already claimed once  |
+| `InvalidSchedule`        | 4004 | Bad parameters        |
+| `InsufficientBalance`    | 4005 | Not enough tokens     |
+| `GrantNotFound`          | 4006 | ID doesn't exist      |
+| `Revoked`                | 4007 | Grant revoked         |
+| `InvalidTimelock`        | 4008 | Delay < 1 hour        |
+| `NotEnoughTimeForRevoke` | 4009 | Timelock not elapsed  |
 
 ---
 
 ## 🚀 Deployment
 
 ### Build
+
 ```bash
 cargo build --release --target wasm32-unknown-unknown
 ```
 
 ### Deploy to Testnet
+
 ```bash
 soroban contract deploy \
   --network testnet \
@@ -292,6 +318,7 @@ soroban contract deploy \
 ```
 
 ### Initialize
+
 ```bash
 soroban contract invoke \
   --network testnet \
@@ -307,39 +334,43 @@ soroban contract invoke \
 
 ## 📊 Statistics
 
-| Metric | Value |
-|--------|-------|
-| **Lines of Code** | 600+ |
-| **Test Cases** | 18+ |
-| **Test Coverage** | Comprehensive |
-| **Security Layers** | 5 |
-| **Error Types** | 9 |
-| **Events** | 3 types |
-| **Functions** | 7 core + 2 query |
+| Metric              | Value            |
+| ------------------- | ---------------- |
+| **Lines of Code**   | 600+             |
+| **Test Cases**      | 18+              |
+| **Test Coverage**   | Comprehensive    |
+| **Security Layers** | 5                |
+| **Error Types**     | 9                |
+| **Events**          | 3 types          |
+| **Functions**       | 7 core + 2 query |
 
 ---
 
 ## 🔗 Integration Points
 
 ### Backend
+
 - Grant vesting when issuing academy rewards
 - Store grant IDs in user profiles
 - Monitor vesting status
 - Handle revocations
 
 ### Frontend
+
 - Display vesting progress
 - Show claim eligibility
 - Execute claims
 - Track claim history
 
 ### Indexer
+
 - Subscribe to Grant events
 - Subscribe to Claim events
 - Subscribe to Revoke events
 - Build user vesting history
 
 ### Governance
+
 - Monitor revocation events
 - Track admin actions
 - Audit grant history
@@ -349,6 +380,7 @@ soroban contract invoke \
 ## 💡 Usage Example
 
 ### Complete Flow
+
 ```rust
 // 1. Initialize
 AcademyVestingContract::init(env.clone(), admin, token, governance)?;
@@ -401,12 +433,14 @@ let error = AcademyVestingContract::claim(env, grant_id, user_address);
 ## 📞 Support
 
 ### Questions?
+
 - **What is this?** → [VESTING_QUICK_REFERENCE.md](./VESTING_QUICK_REFERENCE.md)
 - **How do I use it?** → [INTEGRATION_GUIDE.md](./INTEGRATION_GUIDE.md)
 - **How does it work?** → [VESTING_DESIGN.md](./VESTING_DESIGN.md)
 - **Show me code** → [src/vesting.rs](./src/vesting.rs)
 
 ### Issues
+
 - Check [VESTING_DESIGN.md](./VESTING_DESIGN.md#⚠️-error-codes) for error code meanings
 - Run tests: `cargo test --lib`
 - Review test file for examples: [src/test.rs](./src/test.rs)
@@ -415,7 +449,7 @@ let error = AcademyVestingContract::claim(env, grant_id, user_address);
 
 ## 📄 License
 
-Part of Stellara Academy Rewards System
+Part of VitalisXAcademy Rewards System
 
 ---
 
@@ -427,7 +461,7 @@ Part of Stellara Academy Rewards System
 ✅ **User-Friendly**: Step-by-step integration guide  
 ✅ **Secure**: Single-claim + timelock prevents attacks  
 ✅ **Transparent**: All events on-chain for auditing  
-✅ **Extensible**: Reusable for future academy programs  
+✅ **Extensible**: Reusable for future academy programs
 
 ---
 

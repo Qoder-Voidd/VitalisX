@@ -1,10 +1,11 @@
 # Workflow Orchestration Engine
 
-A comprehensive workflow orchestration engine for Stellara AI that coordinates multi-step, long-running backend operations with guaranteed exactly-once execution, idempotency, and failure recovery.
+A comprehensive workflow orchestration engine for VitalisX that coordinates multi-step, long-running backend operations with guaranteed exactly-once execution, idempotency, and failure recovery.
 
 ## 🎯 Features
 
 ### Core Capabilities
+
 - **Stateful Workflows**: Explicit state machine-based workflow definitions
 - **Idempotency Guarantees**: Deterministic idempotency keys prevent duplicate operations
 - **Failure Recovery**: Safe resume, retry, and compensation logic
@@ -12,6 +13,7 @@ A comprehensive workflow orchestration engine for Stellara AI that coordinates m
 - **Observability**: Admin endpoints for monitoring and control
 
 ### Workflow Types
+
 - **Smart Contract Deployment**: Deploy → Index → Verify
 - **Trade Execution**: Execute → Confirm → Portfolio Update
 - **AI Job Chains**: STT → LLM → TTS processing
@@ -23,12 +25,14 @@ A comprehensive workflow orchestration engine for Stellara AI that coordinates m
 ### Core Components
 
 #### Workflow Engine
+
 - **WorkflowExecutionService**: Main orchestration engine
 - **WorkflowStateMachineService**: State transition management
 - **IdempotencyService**: Idempotency key generation and validation
 - **WorkflowService**: High-level workflow management API
 
 #### Database Schema
+
 ```sql
 workflows {
   id: uuid (primary key)
@@ -71,6 +75,7 @@ workflow_steps {
 ### State Machines
 
 #### Workflow States
+
 ```
 PENDING → RUNNING → COMPLETED
     ↓         ↓
@@ -78,6 +83,7 @@ CANCELLED  FAILED → COMPENSATING → COMPENSATED
 ```
 
 #### Step States
+
 ```
 PENDING → RUNNING → COMPLETED
     ↓         ↓
@@ -121,7 +127,7 @@ const workflow = await workflowService.startWorkflow(
     contractName: 'MyToken',
   },
   'user123',
-  '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6'
+  '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',
 );
 
 console.log(`Workflow started: ${workflow.id}`);
@@ -148,10 +154,10 @@ const myWorkflow: WorkflowDefinition = {
       execute: async (input: any, context: WorkflowContext) => {
         // Step implementation
         console.log(`Executing step for workflow: ${context.workflowId}`);
-        
+
         // Business logic here
         const result = await doSomething(input);
-        
+
         return { processedData: result };
       },
       compensate: async (input: any, output: any, context: WorkflowContext) => {
@@ -174,7 +180,11 @@ workflowExecutionService.registerWorkflowDefinition(myWorkflow);
 interface StepDefinition {
   name: string;
   execute: (input: any, context: WorkflowContext) => Promise<any>;
-  compensate?: (input: any, output: any, context: WorkflowContext) => Promise<any>;
+  compensate?: (
+    input: any,
+    output: any,
+    context: WorkflowContext,
+  ) => Promise<any>;
   isIdempotent: boolean;
   maxRetries?: number;
   timeout?: number;
@@ -193,7 +203,7 @@ The system generates deterministic idempotency keys to prevent duplicate operati
 const workflowKey = idempotencyService.generateWorkflowIdempotencyKey(
   'contract_deployment',
   'user123',
-  { contractCode: '0x...', contractName: 'Token' }
+  { contractCode: '0x...', contractName: 'Token' },
 );
 // Result: "workflow:contract_deployment:user123:a1b2c3d4..."
 
@@ -201,7 +211,7 @@ const workflowKey = idempotencyService.generateWorkflowIdempotencyKey(
 const stepKey = idempotencyService.generateStepIdempotencyKey(
   workflowKey,
   'deploy_contract',
-  { contractAddress: '0x...' }
+  { contractAddress: '0x...' },
 );
 // Result: "step:deploy_contract:e5f6g7h8..."
 ```
@@ -226,7 +236,7 @@ const nextRetryTime = stateMachine.calculateNextRetryTime(retryCount, 1000);
 const shouldRetry = stateMachine.shouldRetry(
   StepState.FAILED,
   currentRetryCount,
-  maxRetries
+  maxRetries,
 );
 ```
 
@@ -238,7 +248,7 @@ await workflowService.compensateWorkflow(workflowId);
 
 // Compensation executes in reverse order
 // Step 3: Compensate
-// Step 2: Compensate  
+// Step 2: Compensate
 // Step 1: Compensate
 ```
 
@@ -427,7 +437,7 @@ const workflow = await workflowService.startWorkflow(
     constructorArgs: ['1000000', 'MyToken', 'MTK'],
   },
   'user123',
-  '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6'
+  '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',
 );
 
 // Monitor progress
@@ -448,7 +458,7 @@ const workflow = await workflowService.startWorkflow(
     slippage: 0.01,
   },
   'user456',
-  '0x8ba1f109551bD432803012645Hac136c'
+  '0x8ba1f109551bD432803012645Hac136c',
 );
 
 // Handle completion
@@ -467,4 +477,4 @@ workflow.on('completed', (result) => {
 
 ## 📄 License
 
-This project is part of the Stellara AI ecosystem. See the main repository for licensing information.
+This project is part of the VitalisX ecosystem. See the main repository for licensing information.

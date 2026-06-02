@@ -1,8 +1,8 @@
-# Stellara Upgrade Governance - User Guide
+# VitalisXUpgrade Governance - User Guide
 
 ## Quick Start Guide
 
-This guide provides step-by-step instructions for proposing, approving, and executing contract upgrades using the Stellara governance system.
+This guide provides step-by-step instructions for proposing, approving, and executing contract upgrades using the VitalisXgovernance system.
 
 ## Prerequisites
 
@@ -344,7 +344,7 @@ Sequential (Recommended):
 Parallel (Not Allowed):
   Proposal 1 (Pending)
   Proposal 2 (Pending)  ← Only one can execute at a time
-  
+
 Note: State must be migrated sequentially to maintain integrity
 ```
 
@@ -362,16 +362,16 @@ INTERVAL=${2:-60}  # Check every 60 seconds
 
 while true; do
   echo "[$(date)] Checking contract state..."
-  
+
   # Get current version
   VERSION=$(stellar contract invoke \
     --id $TRADING_ID \
     --source my-account \
     --network testnet \
     -- get_version)
-  
+
   echo "Current Version: $VERSION"
-  
+
   sleep $INTERVAL
 done
 EOF
@@ -415,7 +415,7 @@ Solution: Verify the account has correct governance role
 
 ```
 Cause: Trying to execute before timelock delay has passed
-Solution: 
+Solution:
   • Check proposal execution_time
   • Wait until current_time >= execution_time
   • Use: date +%s to check current timestamp
@@ -444,6 +444,7 @@ Solution:
 ## Best Practices
 
 ### For Admins
+
 - ✅ Always use multi-sig (never 1-of-1)
 - ✅ Include detailed descriptions in proposals
 - ✅ Use minimum 24-hour timelocks on mainnet
@@ -451,6 +452,7 @@ Solution:
 - ✅ Communicate upgrades to community 48h in advance
 
 ### For Approvers
+
 - ✅ Review all proposed changes before approving
 - ✅ Verify contract hash matches official builds
 - ✅ Check for security audit results
@@ -458,6 +460,7 @@ Solution:
 - ✅ Coordinate with other signers out-of-band
 
 ### For the Executor
+
 - ✅ Only execute after timelock expires
 - ✅ Verify proposal status is Approved
 - ✅ Monitor network conditions before execution

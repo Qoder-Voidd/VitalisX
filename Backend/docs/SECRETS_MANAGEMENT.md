@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document outlines the secrets management approach for the Stellara project using **HashiCorp Vault** as the primary secret store, with **AWS Secrets Manager** as an alternative for AWS-deployed environments.
+This document outlines the secrets management approach for the VitalisXproject using **HashiCorp Vault** as the primary secret store, with **AWS Secrets Manager** as an alternative for AWS-deployed environments.
 
 ## Architecture
 
@@ -30,7 +30,7 @@ vault/data/stellara/database/postgres:
 ```
 vault/data/stellara/auth/jwt:
   - secret: (HS256 key, min 256 bits)
-  
+
 vault/data/stellara/auth/refresh-token:
   - secret: (separate key for refresh tokens)
 ```
@@ -54,7 +54,7 @@ vault/data/stellara/external/stellar:
 vault/data/stellara/external/llm:
   - api-key: (e.g., OpenAI, Anthropic)
   - base-url: (optional, for self-hosted)
-  
+
 vault/data/stellara/external/stripe:
   - secret-key: (Stripe SK)
   - publishable-key: (Stripe PK)
@@ -100,6 +100,7 @@ vault login -method=token -path=auth/token/login <root_token>  # Default: "devro
 #### Production (AWS Secrets Manager)
 
 AWS Secrets Manager does not require local installation. Access is through:
+
 - AWS CLI
 - SDK (boto3, AWS SDK for Node.js, etc.)
 - AWS Console
@@ -170,19 +171,21 @@ See [VAULT_CLIENT_NODEJS.md](./VAULT_CLIENT_NODEJS.md)
 ### For Frontend (React/Next.js)
 
 Frontend should **never** load secrets from Vault directly. Instead:
+
 1. Backend exposes public configuration endpoints (e.g., `/api/config/public`)
 2. Frontend calls these endpoints to get public Stripe key, RPC URLs, etc.
 3. Sensitive operations use backend API calls
 
 ```typescript
 // Example: Frontend loads public config
-const publicConfig = await fetch('/api/config/public').then(r => r.json());
+const publicConfig = await fetch('/api/config/public').then((r) => r.json());
 // { stripePublishableKey: '...', rpcUrl: '...' }
 ```
 
 ### For Contracts (Rust)
 
 Contracts are on-chain and do not directly access Vault. Instead:
+
 1. Deploy parameters (contract addresses, initial state) are provided at deploy time
 2. Use Stellar Soroban's environment for runtime values
 3. Deployment scripts load secrets from Vault

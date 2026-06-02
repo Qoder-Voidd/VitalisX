@@ -1,6 +1,6 @@
 # Real-Time Voice Intelligence & Conversation State Engine
 
-This module provides a comprehensive real-time voice conversation engine for Stellara AI, enabling continuous voice interaction with users across learning, trading explanations, and community support.
+This module provides a comprehensive real-time voice conversation engine for VitalisX, enabling continuous voice interaction with users across learning, trading explanations, and community support.
 
 ## Architecture Overview
 
@@ -20,30 +20,35 @@ The voice engine is built with the following core components:
 ## Features
 
 ### 🎯 Voice Session Management
+
 - Create, resume, and terminate voice sessions
 - Tie sessions to user ID, wallet address, and feature context
 - Enforce session TTL and automatic cleanup
 - Support for concurrent session isolation
 
 ### 🔄 Conversation State Machine
+
 - **States**: `IDLE`, `LISTENING`, `THINKING`, `RESPONDING`, `INTERRUPTED`
 - Valid state transitions with validation
 - Interrupt handling for thinking/responding states
 - Consistent state recovery
 
 ### 📡 Streaming Response Engine
+
 - Incremental AI response streaming via WebSockets
 - Support for partial TTS playback during generation
 - User interruption handling (stop/re-prompt)
 - Multiple concurrent stream management
 
 ### 💾 Context Persistence
+
 - Store user prompts and AI responses with timestamps
 - Feature context tracking (academy, trading, general, community)
 - Session replay and continuation support
 - Redis-based persistence with TTL
 
 ### 🔒 Security & Performance
+
 - Per-user session limits
 - Session hijacking prevention
 - Bounded WebSocket memory usage
@@ -52,6 +57,7 @@ The voice engine is built with the following core components:
 ## WebSocket API
 
 ### Connection
+
 ```typescript
 // Connect to voice namespace
 const socket = io('/voice', {
@@ -67,6 +73,7 @@ const socket = io('/voice', {
 #### Client → Server
 
 **Create Session**
+
 ```typescript
 socket.emit('voice:create-session', {
   userId: 'user123',
@@ -77,6 +84,7 @@ socket.emit('voice:create-session', {
 ```
 
 **Send Message**
+
 ```typescript
 socket.emit('voice:message', {
   content: 'How does staking work?',
@@ -85,6 +93,7 @@ socket.emit('voice:message', {
 ```
 
 **Interrupt Response**
+
 ```typescript
 socket.emit('voice:interrupt', {
   streamId?: 'stream123' // Optional - interrupts all if not provided
@@ -92,19 +101,22 @@ socket.emit('voice:interrupt', {
 ```
 
 **Session Actions**
+
 ```typescript
 socket.emit('voice:action', {
   state: 'listening', // Optional state transition
-  interrupt: true // Optional interrupt flag
+  interrupt: true, // Optional interrupt flag
 });
 ```
 
 **Terminate Session**
+
 ```typescript
 socket.emit('voice:terminate');
 ```
 
 **Ping/Pong**
+
 ```typescript
 socket.emit('voice:ping');
 ```
@@ -112,6 +124,7 @@ socket.emit('voice:ping');
 #### Server → Client
 
 **Session Created**
+
 ```typescript
 socket.on('voice:session-created', ({ session }) => {
   console.log('Session created:', session.id);
@@ -119,6 +132,7 @@ socket.on('voice:session-created', ({ session }) => {
 ```
 
 **Session Resumed**
+
 ```typescript
 socket.on('voice:resumed', ({ sessionId, state }) => {
   console.log('Session resumed:', sessionId, state);
@@ -126,6 +140,7 @@ socket.on('voice:resumed', ({ sessionId, state }) => {
 ```
 
 **Thinking State**
+
 ```typescript
 socket.on('voice:thinking', ({ sessionId, streamId }) => {
   console.log('AI is thinking...');
@@ -133,6 +148,7 @@ socket.on('voice:thinking', ({ sessionId, streamId }) => {
 ```
 
 **Responding State**
+
 ```typescript
 socket.on('voice:responding', ({ sessionId, streamId }) => {
   console.log('AI is responding...');
@@ -140,6 +156,7 @@ socket.on('voice:responding', ({ sessionId, streamId }) => {
 ```
 
 **Response Chunk**
+
 ```typescript
 socket.on('voice:chunk', ({ sessionId, streamId, chunk }) => {
   console.log('Partial response:', chunk.content);
@@ -148,6 +165,7 @@ socket.on('voice:chunk', ({ sessionId, streamId, chunk }) => {
 ```
 
 **Response Complete**
+
 ```typescript
 socket.on('voice:complete', ({ sessionId, streamId, response }) => {
   console.log('Full response:', response);
@@ -155,6 +173,7 @@ socket.on('voice:complete', ({ sessionId, streamId, response }) => {
 ```
 
 **Interrupted**
+
 ```typescript
 socket.on('voice:interrupted', ({ sessionId, streamId }) => {
   console.log('Response was interrupted');
@@ -162,6 +181,7 @@ socket.on('voice:interrupted', ({ sessionId, streamId }) => {
 ```
 
 **State Updated**
+
 ```typescript
 socket.on('voice:state-updated', ({ sessionId, state }) => {
   console.log('New state:', state);
@@ -169,6 +189,7 @@ socket.on('voice:state-updated', ({ sessionId, state }) => {
 ```
 
 **Session Terminated**
+
 ```typescript
 socket.on('voice:terminated', ({ sessionId }) => {
   console.log('Session ended:', sessionId);
@@ -176,6 +197,7 @@ socket.on('voice:terminated', ({ sessionId }) => {
 ```
 
 **Error Handling**
+
 ```typescript
 socket.on('voice:error', ({ message }) => {
   console.error('Voice error:', message);
@@ -183,6 +205,7 @@ socket.on('voice:error', ({ message }) => {
 ```
 
 **Ping Response**
+
 ```typescript
 socket.on('voice:pong', ({ timestamp }) => {
   console.log('Pong received at:', timestamp);
@@ -192,6 +215,7 @@ socket.on('voice:pong', ({ timestamp }) => {
 ## State Machine
 
 ### Valid Transitions
+
 - `IDLE` → `LISTENING`
 - `LISTENING` → `THINKING` | `INTERRUPTED`
 - `THINKING` → `RESPONDING` | `INTERRUPTED`
@@ -199,18 +223,21 @@ socket.on('voice:pong', ({ timestamp }) => {
 - `INTERRUPTED` → `LISTENING` | `IDLE`
 
 ### Interruptible States
+
 - `THINKING`
 - `RESPONDING`
 
 ## Configuration
 
 ### Environment Variables
+
 ```bash
 REDIS_URL=redis://localhost:6379
 PORT=3000
 ```
 
 ### Session Configuration
+
 - **Default TTL**: 3600 seconds (1 hour)
 - **Cleanup Interval**: 5 minutes
 - **Max Concurrent Sessions**: Per user limits enforced
@@ -218,16 +245,17 @@ PORT=3000
 ## Usage Examples
 
 ### Basic Voice Session
+
 ```typescript
 // 1. Create session
 socket.emit('voice:create-session', {
   userId: 'user123',
-  context: 'academy'
+  context: 'academy',
 });
 
 // 2. Send message
 socket.emit('voice:message', {
-  content: 'Explain DeFi staking'
+  content: 'Explain DeFi staking',
 });
 
 // 3. Handle streaming response
@@ -241,13 +269,14 @@ socket.emit('voice:interrupt');
 ```
 
 ### Session Resumption
+
 ```typescript
 // Connect with existing session
 const socket = io('/voice', {
   auth: {
     userId: 'user123',
-    sessionId: 'existing-session-id'
-  }
+    sessionId: 'existing-session-id',
+  },
 });
 
 socket.on('voice:resumed', ({ sessionId, state }) => {
@@ -258,6 +287,7 @@ socket.on('voice:resumed', ({ sessionId, state }) => {
 ## Testing
 
 Run the comprehensive test suite:
+
 ```bash
 npm test
 
@@ -269,6 +299,7 @@ npm test -- voice-session.service.spec.ts
 ```
 
 ### Test Coverage
+
 - Voice session lifecycle management
 - Conversation state transitions
 - Streaming response functionality
@@ -279,16 +310,19 @@ npm test -- voice-session.service.spec.ts
 ## Performance Considerations
 
 ### Memory Management
+
 - Active streams are tracked and cleaned up
 - Session data is persisted in Redis with TTL
 - WebSocket connections are properly managed
 
 ### Scalability
+
 - Redis adapter for multi-instance scaling
 - Session isolation prevents cross-talk
 - Bounded concurrent operations per user
 
 ### Security
+
 - User authentication required for all operations
 - Session validation prevents hijacking
 - Wallet address association for crypto features
@@ -296,6 +330,7 @@ npm test -- voice-session.service.spec.ts
 ## Monitoring
 
 ### Key Metrics
+
 - Active voice sessions
 - Streaming response count
 - Session duration and completion rates
@@ -303,6 +338,7 @@ npm test -- voice-session.service.spec.ts
 - Error rates by type
 
 ### Logs
+
 - Session lifecycle events
 - State transitions
 - Stream start/complete/interrupt
@@ -312,19 +348,24 @@ npm test -- voice-session.service.spec.ts
 ## Integration Points
 
 ### STT/TTS Integration
+
 The voice engine operates on top of STT/TTS outputs:
+
 - STT results come as `voice:message` events
 - TTS playback can use `voice:chunk` events for incremental audio
 
 ### AI Service Integration
+
 Replace the mock AI response in `StreamingResponseService` with actual AI service calls.
 
 ### Analytics Integration
+
 Session data and conversation logs can be streamed to analytics services for learning progress tracking.
 
 ## Error Handling
 
 ### Common Errors
+
 - `'Authentication required'` - Missing user ID in auth
 - `'No active session'` - User has no active voice session
 - `'Invalid session'` - Session not found or user mismatch
@@ -332,6 +373,7 @@ Session data and conversation logs can be streamed to analytics services for lea
 - `'Failed to interrupt'` - Session not in interruptible state
 
 ### Recovery Strategies
+
 - Automatic session resumption on reconnect
 - State reset on critical errors
 - Graceful degradation for network issues
@@ -339,6 +381,7 @@ Session data and conversation logs can be streamed to analytics services for lea
 ## Future Enhancements
 
 ### Planned Features
+
 - Voice activity detection integration
 - Emotion and sentiment analysis
 - Multi-language support
@@ -346,6 +389,7 @@ Session data and conversation logs can be streamed to analytics services for lea
 - Advanced conversation analytics
 
 ### Performance Improvements
+
 - Connection pooling for AI services
 - Response caching for common queries
 - Load balancing for high-traffic scenarios

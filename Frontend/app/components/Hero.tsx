@@ -15,7 +15,9 @@ export default function Hero() {
           </h1>
 
           <p className="text-base leading-relaxed text-white sm:text-lg">
-            Stellara AI is an all-in-one Web3 academy combining AI-powered learning, social crypto insights, and real on-chain trading — built on Stellar.
+            VitalisX is an all-in-one Web3 academy combining AI-powered
+            learning, social crypto insights, and real on-chain trading — built
+            on Stellar.
           </p>
 
           <div className="flex flex-wrap gap-3 pt-1">
@@ -37,7 +39,7 @@ export default function Hero() {
         <div className="relative flex items-center justify-center lg:justify-end">
           <Image
             src="/images/heroImage.png"
-            alt="Stellara AI assistant"
+            alt="VitalisX assistant"
             width={500}
             height={500}
             className="h-auto w-full max-w-sm object-contain lg:max-w-md xl:max-w-lg"

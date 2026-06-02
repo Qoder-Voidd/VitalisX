@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-/// Impermanent loss estimation and hedging for the Stellara Advanced AMM.
+/// Impermanent loss estimation and hedging for the VitalisXAdvanced AMM.
 ///
 /// # IL Formula
 ///

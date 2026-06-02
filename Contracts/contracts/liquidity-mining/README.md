@@ -16,9 +16,11 @@ The Liquidity Mining Program enables decentralized liquidity providers (LPs) to 
 ## 🏗️ Architecture
 
 ### Smart Contract (Soroban)
+
 **Location**: `Contracts/contracts/liquidity-mining/`
 
 Core on-chain contract handling:
+
 - Pair management and configuration
 - LP token tracking and balance management
 - Reward calculation and distribution
@@ -26,9 +28,11 @@ Core on-chain contract handling:
 - Event emission for indexing
 
 ### Backend Service (NestJS + Prisma)
+
 **Location**: `Backend/src/liquidity-mining/`
 
 Off-chain services for:
+
 - LP balance history tracking
 - Reward calculations and caching
 - User statistics aggregation
@@ -36,9 +40,11 @@ Off-chain services for:
 - Event logging and analytics
 
 ### Database Schema (PostgreSQL)
+
 **Location**: `Backend/prisma/schema.prisma`
 
 5 core models:
+
 - `LiquidityMiningPair`: Trading pair configuration
 - `LPStake`: User LP provision records
 - `LiquidityReward`: Claimed reward history
@@ -48,57 +54,61 @@ Off-chain services for:
 ## 📊 Data Models
 
 ### LiquidityMiningPair
+
 ```typescript
 {
-  id: string;                          // UUID
-  pairId: number;                      // Unique pair identifier
-  pairSymbol: string;                  // "USDC_STELLAR"
-  emissionsPerBlock: Decimal;          // Reward tokens per block
-  totalAllocated: Decimal;             // Total rewards for this pair
-  accumulatedRewardPerShare: Decimal;  // For reward distribution
-  lastUpdateBlock: BigInt;             // Block height of last update
-  active: boolean;                     // Enable/disable liquidity mining
+  id: string; // UUID
+  pairId: number; // Unique pair identifier
+  pairSymbol: string; // "USDC_STELLAR"
+  emissionsPerBlock: Decimal; // Reward tokens per block
+  totalAllocated: Decimal; // Total rewards for this pair
+  accumulatedRewardPerShare: Decimal; // For reward distribution
+  lastUpdateBlock: BigInt; // Block height of last update
+  active: boolean; // Enable/disable liquidity mining
 }
 ```
 
 ### LPStake
+
 ```typescript
 {
   id: string;
-  userAddress: string;                 // User wallet
-  pairId: number;                      // Which pair
-  lpBalance: Decimal;                  // Amount of LP tokens staked
-  startTimestamp: DateTime;            // When liquidity started
-  rewardDebt: Decimal;                 // Claimed rewards tracking
-  bonusMultiplierTier: number;         // 0=1x, 1=2x, 2=3x, 3=5x
-  lockedUntil: DateTime;               // Lockup expiration
+  userAddress: string; // User wallet
+  pairId: number; // Which pair
+  lpBalance: Decimal; // Amount of LP tokens staked
+  startTimestamp: DateTime; // When liquidity started
+  rewardDebt: Decimal; // Claimed rewards tracking
+  bonusMultiplierTier: number; // 0=1x, 1=2x, 2=3x, 3=5x
+  lockedUntil: DateTime; // Lockup expiration
 }
 ```
 
 ### LiquidityReward
+
 ```typescript
 {
   id: string;
   userAddress: string;
   pairId: number;
-  rewardAmount: Decimal;               // Base reward
-  bonusMultiplier: Decimal;            // Applied multiplier
-  finalRewardAmount: Decimal;          // After multiplier
+  rewardAmount: Decimal; // Base reward
+  bonusMultiplier: Decimal; // Applied multiplier
+  finalRewardAmount: Decimal; // After multiplier
   claimedAt: DateTime;
-  transactionHash: string;             // On-chain proof
+  transactionHash: string; // On-chain proof
   blockNumber: BigInt;
 }
 ```
 
 ### GovernanceLock
+
 ```typescript
 {
   id: string;
   userAddress: string;
-  lpStakeId: string;                   // Reference to LP stake
-  governancePower: Decimal;            // 50% of claimed reward
-  lockupDuration: number;              // Days locked (1-365)
-  lockedUntil: DateTime;               // When unlocks
+  lpStakeId: string; // Reference to LP stake
+  governancePower: Decimal; // 50% of claimed reward
+  lockupDuration: number; // Days locked (1-365)
+  lockedUntil: DateTime; // When unlocks
   released: boolean;
   releasedAt: DateTime;
 }
@@ -107,6 +117,7 @@ Off-chain services for:
 ## 💰 Reward Mechanics
 
 ### Emission Schedule
+
 - **Base Rate**: Configurable tokens per block per pair
 - **Halving** (optional): Reduce emissions at specific block intervals
 - **Total Allocation**: Cap on total rewards per pair
@@ -124,13 +135,14 @@ pending_reward = final_reward - claimed_debt
 Lock liquidity to earn multipliers:
 
 | Tier | Lockup Period | Multiplier | APY Boost |
-|------|--------------|-----------|-----------|
-| None | None | 1x | 0% |
-| 1 | 30 days | 2x | +100% |
-| 2 | 90 days | 3x | +200% |
-| 3 | 180 days | 5x | +400% |
+| ---- | ------------- | ---------- | --------- |
+| None | None          | 1x         | 0%        |
+| 1    | 30 days       | 2x         | +100%     |
+| 2    | 90 days       | 3x         | +200%     |
+| 3    | 180 days      | 5x         | +400%     |
 
 #### Example
+
 - Provide 1000 USDC-LP with Tier 3 (5x) multiplier
 - Base APR: 20%
 - With multiplier: 20% × 5 = **100% APR**
@@ -138,15 +150,17 @@ Lock liquidity to earn multipliers:
 ### Governance Power
 
 When claiming rewards:
+
 - **50%** distributed as reward tokens
 - **50%** locked as governance power
 
 ```typescript
-governance_power = final_reward_amount / 2
-locked_until = now + lockup_days
+governance_power = final_reward_amount / 2;
+locked_until = now + lockup_days;
 ```
 
 Governance tokens provide:
+
 - Voting rights in protocol governance
 - Access to governance DAO
 - Proportional allocation in future airdrops
@@ -166,6 +180,7 @@ POST /liquidity-mining/liquidity/provide
 ```
 
 **Response**:
+
 ```json
 {
   "id": "uuid",
@@ -185,6 +200,7 @@ GET /liquidity-mining/rewards/pending/:userAddress/:pairId
 ```
 
 **Response**:
+
 ```json
 {
   "userAddress": "GXXXXX...",
@@ -207,6 +223,7 @@ POST /liquidity-mining/rewards/claim
 ```
 
 **Response**:
+
 ```json
 {
   "id": "uuid",
@@ -231,6 +248,7 @@ POST /liquidity-mining/rewards/lock-governance
 ```
 
 **Response**:
+
 ```json
 {
   "id": "uuid",
@@ -261,6 +279,7 @@ GET /liquidity-mining/user/:userAddress/statistics
 ```
 
 **Response**:
+
 ```json
 {
   "userAddress": "GXXXXX...",
@@ -280,6 +299,7 @@ GET /liquidity-mining/pairs/:pairId/statistics
 ```
 
 **Response**:
+
 ```json
 {
   "pairId": 1,
@@ -297,40 +317,47 @@ GET /liquidity-mining/pairs/:pairId/statistics
 ## 📡 API Endpoints
 
 ### Pair Management
+
 - `POST /liquidity-mining/pairs` - Create new mining pair
 - `GET /liquidity-mining/pairs` - List all pairs
 - `GET /liquidity-mining/pairs/:pairId` - Get pair details
 - `GET /liquidity-mining/pairs/:pairId/statistics` - Get pair stats
 
 ### Liquidity Provision
+
 - `POST /liquidity-mining/liquidity/provide` - Add liquidity
 - `POST /liquidity-mining/liquidity/withdraw` - Remove liquidity
 - `GET /liquidity-mining/liquidity/:userAddress/:pairId` - Get LP stake
 
 ### Rewards
+
 - `GET /liquidity-mining/rewards/pending/:userAddress/:pairId` - Pending rewards
 - `POST /liquidity-mining/rewards/claim` - Claim accumulated rewards
 - `POST /liquidity-mining/rewards/lock-governance` - Lock 50% for governance
 
 ### Analytics
+
 - `GET /liquidity-mining/user/:userAddress/statistics` - User stats
 - `GET /liquidity-mining/health` - Health check
 
 ## 🔍 APR/APY Calculation
 
 ### Annual Percentage Rate (APR)
+
 ```
 APR = (Annual Emissions / Total Liquidity Staked) × 100
 Annual Emissions = Emissions Per Block × 6500 blocks/day × 365 days
 ```
 
 ### Annual Percentage Yield (APY)
+
 ```
 APY = (1 + (APR / 365))^365 - 1
 This accounts for daily compounding of rewards
 ```
 
 ### Example Calculation
+
 - Pair: USDC_STELLAR
 - Emissions: 100 tokens/block
 - Total Liquidity: 500,000 LP tokens
@@ -345,21 +372,25 @@ APY = (1 + (47450/365))^365 - 1 ≈ ???% (compounded daily)
 ## 🔐 Security Considerations
 
 ### Lockup Enforcement
+
 - Contract prevents withdrawal before lockup period expires
 - On-chain timestamp validation
 - Automatic reward claiming on forced withdrawal
 
 ### Bonus Multiplier Integrity
+
 - Multipliers stored on-chain
 - Cannot be changed retroactively for existing stakes
 - Time-locked validation
 
 ### Decimal Precision
+
 - 4 decimal places for token amounts (Decimal type)
 - 5 decimal places for percentages
 - BigInt for block heights to prevent overflow
 
 ### Event Auditing
+
 - All transactions logged to `LiquidityMiningEvent` table
 - Complete audit trail for compliance
 - Event types: provide_liquidity, withdraw_liquidity, claim_reward, lock_governance
@@ -367,6 +398,7 @@ APY = (1 + (47450/365))^365 - 1 ≈ ???% (compounded daily)
 ## 📝 Example Scenarios
 
 ### Scenario 1: Conservative LP (1x multiplier)
+
 1. Provide 1000 USDC-LP to USDC_STELLAR pair
 2. No lockup, standard 1x multiplier
 3. Daily rewards compounding
@@ -374,6 +406,7 @@ APY = (1 + (47450/365))^365 - 1 ≈ ???% (compounded daily)
 5. Use case: High liquidity, flexible capital
 
 ### Scenario 2: Aggressive LP (5x multiplier)
+
 1. Provide 1000 USDC-LP with 180-day lockup
 2. Bonus 5x multiplier applied
 3. Earn 5x more rewards for 6 months
@@ -382,6 +415,7 @@ APY = (1 + (47450/365))^365 - 1 ≈ ???% (compounded daily)
 6. Use case: Long-term commitment, governance participation
 
 ### Scenario 3: Governance Power Accumulation
+
 1. Provide liquidity over multiple pairs
 2. Claim rewards monthly to accumulate governance tokens
 3. Lock 50% of claims for 90 days
@@ -394,12 +428,14 @@ APY = (1 + (47450/365))^365 - 1 ≈ ???% (compounded daily)
 ## 🚀 Deployment
 
 ### Prerequisites
+
 - Stellar testnet account with SOL for gas
 - Soroban CLI v20.5+
 - Node.js 18+
 - PostgreSQL 14+
 
 ### Contract Deployment
+
 ```bash
 cd Contracts/contracts/liquidity-mining
 cargo build --release --target wasm32-unknown-unknown
@@ -415,6 +451,7 @@ soroban contract deploy \
 ```
 
 ### Backend Deployment
+
 ```bash
 cd Backend
 
@@ -431,6 +468,7 @@ pnpm start
 ## 📊 Monitoring & Analytics
 
 ### Key Metrics to Track
+
 - Total value locked (TVL) per pair
 - Average APR/APY over time
 - Reward distribution efficiency
@@ -440,6 +478,7 @@ pnpm start
 ### Database Queries
 
 **Total liquidity staked per pair**:
+
 ```sql
 SELECT pairId, SUM(lpBalance) as totalStaked
 FROM lp_stakes
@@ -448,6 +487,7 @@ GROUP BY pairId;
 ```
 
 **Top stakers by governance power**:
+
 ```sql
 SELECT userAddress, SUM(governancePower) as totalPower
 FROM governance_locks
@@ -458,9 +498,10 @@ LIMIT 10;
 ```
 
 **Reward distribution audit**:
+
 ```sql
-SELECT 
-  pairId, 
+SELECT
+  pairId,
   SUM(finalRewardAmount) as totalRewards,
   COUNT(*) as claimCount,
   AVG(bonusMultiplier) as avgMultiplier
@@ -483,6 +524,7 @@ ORDER BY totalRewards DESC;
 ## 📖 Documentation
 
 See related files:
+
 - [Smart Contract API](Contracts/contracts/liquidity-mining/src/lib.rs)
 - [Database Schema](Backend/prisma/schema.prisma)
 - [Service Implementation](Backend/src/liquidity-mining/liquidity-mining.service.ts)
@@ -506,6 +548,7 @@ See related files:
 ## 🤝 Contributing
 
 To contribute to the liquidity mining program:
+
 1. Create a feature branch from `main`
 2. Add tests for new functionality
 3. Update schema.prisma for data changes
@@ -514,4 +557,4 @@ To contribute to the liquidity mining program:
 
 ## 📄 License
 
-Stellara Liquidity Mining Program © 2026
+VitalisXLiquidity Mining Program © 2026

@@ -4,7 +4,7 @@
 
 set -e
 
-echo "Building Stellara Smart Contracts..."
+echo "Building VitalisXSmart Contracts..."
 echo "======================================"
 
 # Clean previous builds

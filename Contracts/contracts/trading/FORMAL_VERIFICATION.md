@@ -1,17 +1,19 @@
-# Formal Verification Report for Stellara Trading Contract
+# Formal Verification Report for VitalisXTrading Contract
 
 ## Overview
 
-This document outlines the formal verification applied to critical functions in the Stellara Trading Contract. Formal verification uses mathematical methods to prove correctness of code invariants.
+This document outlines the formal verification applied to critical functions in the VitalisXTrading Contract. Formal verification uses mathematical methods to prove correctness of code invariants.
 
 ## Verified Properties
 
 ### Trading Logic Invariants
 
 #### 1. Order Matching Correctness
+
 **Function:** `order_matches(incoming: &LimitOrder, resting: &LimitOrder) -> bool`
 
 **Pre-conditions:**
+
 - `incoming.amount > 0`
 - `resting.amount > 0`
 - `incoming.price > 0`
@@ -19,6 +21,7 @@ This document outlines the formal verification applied to critical functions in 
 - `incoming.pair == resting.pair`
 
 **Post-conditions:**
+
 - For Buy vs Sell orders: matches iff `incoming.price >= resting.price`
 - For Sell vs Buy orders: matches iff `incoming.price <= resting.price`
 - Same side orders: never matches
@@ -27,9 +30,11 @@ This document outlines the formal verification applied to critical functions in 
 **Verification Method:** Symbolic execution with arbitrary inputs
 
 #### 2. Trade Amount Invariants
+
 **Function:** `record_trade(...)`
 
 **Invariants:**
+
 - `signed_amount = amount` for buy trades
 - `signed_amount = -amount` for sell trades
 - `amount > 0` always
@@ -39,7 +44,9 @@ This document outlines the formal verification applied to critical functions in 
 **Method:** Assertion-based verification
 
 #### 3. Order Book Integrity
+
 **Invariants:**
+
 - Order remaining amount ≤ original amount
 - Order status transitions are valid
 - No order appears in multiple positions
@@ -50,9 +57,11 @@ This document outlines the formal verification applied to critical functions in 
 ### Governance Safety Properties
 
 #### 1. Role-Based Access Control
+
 **Function:** `GovernanceManager::require_role(...)`
 
 **Safety Properties:**
+
 - Only Admin can propose upgrades
 - Only Approver can approve proposals
 - Only Executor can execute approved proposals
@@ -62,7 +71,9 @@ This document outlines the formal verification applied to critical functions in 
 **Method:** Access control verification
 
 #### 2. Proposal Approval Logic
+
 **Invariants:**
+
 - Approval count ≤ number of approvers
 - No duplicate approvals
 - Execution requires `approvals_count >= approval_threshold`
@@ -72,6 +83,7 @@ This document outlines the formal verification applied to critical functions in 
 **Method:** State machine verification
 
 #### 3. Timelock Safety
+
 **Property:** Proposals cannot be executed before `execution_time`
 
 **Proof Status:** Verified
@@ -86,6 +98,7 @@ This document outlines the formal verification applied to critical functions in 
 ## Model Checking Results
 
 ### Order Matching Logic
+
 ```
 Verification completed successfully
 - Checked 2^32 possible input combinations
@@ -94,6 +107,7 @@ Verification completed successfully
 ```
 
 ### Governance Approval
+
 ```
 Verification completed successfully
 - State space: 10^6 states explored

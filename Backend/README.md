@@ -1,156 +1,550 @@
-Stellara_backend
-🚀 Stellara Backend — Web3 Crypto Academy Server
+# VitalisX Backend
 
-Stellara Backend is the server-side application powering Stellara AI, a next-generation Web3 learning and social trading platform built on the Stellar blockchain ecosystem. It is designed for crypto learners and traders who need real-time communication, secure account systems, AI-assisted learning tools, and on-chain trading services.
+🏥 **VitalisX Backend — Decentralized Healthcare Records API**
 
-This backend manages authentication, courses, rewards, social feeds, messaging, AI integrations, and blockchain interactions, while exposing REST APIs and WebSocket gateways consumed by the Stellara AI frontend.
+The VitalisX Backend is the core server infrastructure powering the VitalisX healthcare ecosystem. Built with NestJS, PostgreSQL, Redis, and Stellar Soroban integrations, it provides secure APIs, consent enforcement, healthcare record management, credential verification, billing services, appointment scheduling, and blockchain interactions for decentralized patient health records.
 
-🚀 Overview
-Stellara AI is designed to educate, empower, and connect crypto users by combining:
+This backend acts as the trusted orchestration layer between healthcare providers, patients, encrypted storage systems, and the Stellar blockchain while maintaining strict privacy, compliance, and auditability requirements.
 
-A crypto learning academy with structured courses and quizzes
-An AI-powered assistant with text and voice guidance
-A social crypto network with posts, comments, and interactions
-Real-time messaging for one-on-one and group discussions
-On-chain trading tools integrated with Stellar wallets
-Live market news and insights powered by AI
-The backend is responsible for securely managing the core application logic, database interactions, and blockchain integrations.
+---
 
-🧠 Core Features
-🤖 Stellara AI Assistant
-Text & voice-based AI crypto mentor
-Explains trading strategies, blockchain concepts, and Stellar-specific tools
-Provides market insights & educational guidance (not financial advice)
-🎓 Crypto Academy
-Structured learning paths (Beginner → Pro)
-Stellar & Soroban smart contract education
-Interactive quizzes and progress tracking
-🗣 Social Crypto Feed
-Post updates, ideas, and market thoughts
-Like, comment, repost (tweet-style)
-Follow other traders & educators
-💬 Community Chat
-One-on-one messaging
-Group discussions & learning channels
-Trading & ecosystem-focused rooms
-📈 Trading & Wallet
-Trade Stellar-based assets
-Freighter wallet integration
-Portfolio overview & transaction history
-📰 News & Market Intelligence
-Real-time crypto news
-Stellar ecosystem updates
-Market trend summaries via AI
-🛠 Technology Stack
-Backend
-NestJS – API framework
-PostgreSQL – Relational database
-Redis – Caching & real-time messaging
-WebSocket Gateway – Real-time chat & feed
-Blockchain
-Stellar SDK & Horizon API
-Soroban Smart Contracts
-Freighter Wallet integration
-AI & Voice
-LLM API (OpenAI or equivalent)
-Speech-to-Text (Whisper or similar)
-Text-to-Speech (TTS)
-Infrastructure
-Docker for containerization
-AWS / Railway / Render for backend hosting
-Vercel for frontend deployment
-💎 Why Stellara AI Works
-Instantly signals AI intelligence
-Strong connection to Stellar blockchain
-Easy to market & brand
-Scales to mobile apps, APIs, and future tools
-Credible to investors and partners
-⚡ Getting Started
+# 🚀 Overview
 
-✅ Requirements
+VitalisX Backend enables healthcare institutions and professionals to securely manage patient records while preserving patient ownership and consent.
 
-- Node.js v18+
-- PostgreSQL
-- Redis
-- npm or pnpm
+The backend is responsible for:
 
-📦 Installation
+* Patient registration and management
+* Health record creation and retrieval
+* Consent verification and access control
+* Healthcare provider credential validation
+* Prescription and medication management
+* Laboratory result processing
+* Medical billing and insurance claim anchoring
+* Appointment scheduling
+* Blockchain interactions with Stellar Soroban contracts
+* IPFS storage integration
+* Authentication and authorization
+* Audit logging and compliance tracking
 
-```bash
-git clone https://github.com/stellara-network/Stellara_Contracts
-cd Stellara_Contracts/Backend
-npm install
+---
+
+# 🔐 Core Backend Features
+
+## Patient Management
+
+* Patient registration and profile management
+* Patient identity linking with Stellar accounts
+* Medical history indexing
+* Patient search and retrieval
+* Health timeline aggregation
+
+## Health Records
+
+* Structured diagnosis and treatment records
+* Encrypted medical record storage
+* Record versioning and audit trails
+* Record hash anchoring on Stellar
+* Medical history retrieval
+
+## Consent Management
+
+* Patient-controlled access permissions
+* Consent grant and revocation APIs
+* Role-based consent validation
+* Time-bound access control
+* Consent audit logging
+
+## Provider Credential Verification
+
+* Healthcare professional onboarding
+* Credential validation through Soroban contracts
+* Facility affiliation management
+* License verification services
+* Credential expiration monitoring
+
+## Prescription Services
+
+* Prescription management
+* Medication history tracking
+* Drug interaction checks
+* Duplicate prescription detection
+* Pharmacy integration support
+
+## Laboratory Services
+
+* Lab result management
+* Diagnostic report linking
+* Imaging reference storage
+* IPFS document anchoring
+* Result verification
+
+## Billing & Claims
+
+* Medical bill generation
+* Insurance claim anchoring
+* Payment settlement tracking
+* Billing audit records
+* Dispute management support
+
+## Appointment Management
+
+* Appointment scheduling
+* Provider availability management
+* Appointment reminders
+* Appointment token integration
+* Scheduling audit logs
+
+## Analytics & Reporting
+
+* Aggregated health metrics
+* Facility reporting
+* Consent activity analytics
+* Clinical data insights
+* Public health trend aggregation
+
+---
+
+# ⚙️ Technology Stack
+
+## Backend Framework
+
+* NestJS
+* TypeScript
+* Node.js 20+
+
+## Database
+
+* PostgreSQL
+* Prisma ORM
+
+## Cache & Messaging
+
+* Redis
+* WebSocket Gateway
+
+## Blockchain
+
+* Stellar SDK
+* Horizon API
+* Soroban Smart Contracts
+
+## Storage
+
+* IPFS
+* Filebase / Pinata
+
+## Security
+
+* JWT Authentication
+* Role-Based Access Control (RBAC)
+* Stellar Wallet Authentication
+* Record Encryption Services
+
+## Infrastructure
+
+* Docker
+* Docker Compose
+* AWS / Railway / Render
+* GitHub Actions CI/CD
+
+---
+
+# 🏗 Backend Architecture
+
+The VitalisX Backend follows a modular architecture:
+
+```text
+src/
+├── auth/
+├── patients/
+├── records/
+├── consent/
+├── prescriptions/
+├── billing/
+├── labs/
+├── appointments/
+├── credentials/
+├── analytics/
+├── notifications/
+├── stellar/
+├── ipfs/
+├── database/
+├── common/
+└── config/
 ```
 
-🔐 Secrets Management
+### Module Responsibilities
 
-This project uses **HashiCorp Vault** for secure secrets management. Secrets are NOT stored in the repository.
+| Module        | Purpose                                   |
+| ------------- | ----------------------------------------- |
+| auth          | Authentication and authorization          |
+| patients      | Patient lifecycle management              |
+| records       | Medical record operations                 |
+| consent       | Consent enforcement and auditing          |
+| prescriptions | Medication and prescription management    |
+| billing       | Medical billing and claims                |
+| labs          | Lab result management                     |
+| appointments  | Scheduling and appointment workflows      |
+| credentials   | Healthcare provider verification          |
+| analytics     | Reporting and public health insights      |
+| stellar       | Soroban smart contract interactions       |
+| ipfs          | File encryption and decentralized storage |
 
-**Quick Start:**
+---
 
-1. **Local Development with Vault:**
-   ```bash
-   # Start Vault dev server (in a separate terminal)
-   vault server -dev
-   
-   # In another terminal, provision development secrets
-   export VAULT_ADDR='http://localhost:8200'
-   export VAULT_TOKEN='devroot'
-   ./scripts/vault/provision-dev.sh
-   ```
+# 🔗 Stellar Integration
 
-2. **Local Development with .env.local:**
-   ```bash
-   # Create .env.local (ignored by git)
-   cp .env.example .env.local
-   # Edit .env.local with your development secrets
-   ```
+The backend communicates with the following Soroban contracts:
 
-**For detailed setup instructions, see:**
-- [Local Secrets Setup Guide](./docs/LOCAL_SECRETS_SETUP.md)
-- [Secrets Management Strategy](./docs/SECRETS_MANAGEMENT.md)
-- [Vault Client Implementation](./docs/VAULT_CLIENT_NODEJS.md)
+## Patient Registry
 
-⚠️ **SECURITY**: Never commit real secrets to the repository. See [.gitignore](.gitignore) for ignored files.
+* Register patient identities
+* Manage patient metadata references
+* Validate patient ownership
 
-▶ Run Development Server npm run start:dev
+## Consent Manager
 
-▶ Run Development Server npm run start:dev
+* Grant consent
+* Revoke consent
+* Verify access rights
+* Retrieve consent logs
 
-🧪 Testing npm run test npm run test:e2e
+## Record Anchor
 
-🤝 Contributing The first step is to Fork the repository then you Create a feature branch Commit your changes git pull latest changes to avoid conflicts Submit a pull request Issues and feature requests are welcome.
+* Anchor medical record hashes
+* Verify record integrity
+* Track record history
 
-🗄️ Database & Migrations Workflow
+## Credential Vault
 
-Para garantizar la integridad de los datos y la consistencia entre entornos, este proyecto utiliza **TypeORM Migrations** y **Docker**.
+* Verify healthcare licenses
+* Manage credential lifecycle
+* Validate provider permissions
 
-1. Infraestructura Local
-Levanta la base de datos PostgreSQL utilizando el contenedor preconfigurado:
-bash
+## Billing Ledger
+
+* Create billing entries
+* Anchor insurance claims
+* Track settlements
+
+## Appointment Token
+
+* Manage appointment reservations
+* Verify tokenized appointment slots
+
+---
+
+# 🔐 Authentication & Authorization
+
+VitalisX Backend supports:
+
+### Stellar Wallet Authentication
+
+* Freighter Wallet
+* Stellar SEP-based authentication
+* Wallet signature verification
+
+### JWT Authentication
+
+* Access tokens
+* Refresh tokens
+* Session management
+
+### Role-Based Access Control
+
+Supported roles:
+
+* PATIENT
+* DOCTOR
+* NURSE
+* PHARMACIST
+* LAB_TECHNICIAN
+* SPECIALIST
+* ADMIN
+* HOSPITAL_ADMIN
+
+---
+
+# 🛡 Privacy & Security
+
+Patient data protection is a core requirement.
+
+### Security Measures
+
+* End-to-end encrypted medical records
+* Zero-trust access model
+* On-chain consent validation
+* Immutable audit trails
+* Secure API authentication
+* Role-based authorization
+* IPFS content integrity verification
+* Sensitive data redaction from logs
+
+### Access Workflow
+
+```text
+Provider Request
+        │
+        ▼
+Authentication
+        │
+        ▼
+Credential Verification
+        │
+        ▼
+Consent Validation
+        │
+ ┌──────┴───────┐
+ │              │
+Granted      Denied
+ │              │
+ ▼              ▼
+Decrypt      Return 403
+Record
+ │
+ ▼
+Log Access
+```
+
+---
+
+# 📦 Installation
+
+## Requirements
+
+* Node.js v20+
+* PostgreSQL
+* Redis
+* Docker
+* pnpm
+
+## Clone Repository
+
+```bash
+git clone https://github.com/your-org/vitalisx-backend.git
+cd vitalisx-backend
+```
+
+## Install Dependencies
+
+```bash
+pnpm install
+```
+
+## Start Infrastructure
+
+```bash
 docker-compose up -d
+```
 
-Nota: La base de datos está mapeada al puerto 5433 para evitar conflictos con instalaciones locales preexistentes.
+## Configure Environment
 
-2. Comandos de Migración
-Utiliza estos scripts para gestionar el esquema de la base de datos sin usar synchronize: true:
+```bash
+cp .env.example .env
+```
 
-Generar Migración: (Ejecutar después de modificar una entidad .entity.ts)
+## Run Database Migrations
 
-Bash
-npm run migration:generate -- src/database/migrations/NombreDeLaMigracion
-Aplicar Migraciones: (Sincroniza tu base de datos local con los últimos cambios)
+```bash
+pnpm prisma migrate dev
+```
 
-Bash
-npm run migration:run
-Revertir Cambios: (Deshace la última migración aplicada)
+## Seed Database
 
-Bash
-npm run migration:revert
+```bash
+pnpm db:seed
+```
 
-3. Buenas Prácticas 
-Nunca modifiques manualmente las tablas en la base de datos; usa siempre archivos de migración.
+---
 
-Revisa el archivo generado en src/database/migrations/ antes de hacer commit para asegurar que el SQL es el esperado.
+# 🔐 Secrets Management
 
-Asegúrate de que tu archivo .env apunte al puerto 5433 si usas el entorno Docker provisto.
+VitalisX Backend uses HashiCorp Vault for secure secret storage.
+
+## Local Development
+
+```bash
+vault server -dev
+```
+
+```bash
+export VAULT_ADDR=http://localhost:8200
+export VAULT_TOKEN=devroot
+```
+
+Provision development secrets:
+
+```bash
+./scripts/vault/provision-dev.sh
+```
+
+Never commit production secrets to the repository.
+
+---
+
+# ▶ Running the Backend
+
+Development:
+
+```bash
+pnpm start:dev
+```
+
+Production:
+
+```bash
+pnpm build
+pnpm start:prod
+```
+
+Server:
+
+```text
+http://localhost:4000
+```
+
+---
+
+# 🧪 Testing
+
+Run unit tests:
+
+```bash
+pnpm test
+```
+
+Run e2e tests:
+
+```bash
+pnpm test:e2e
+```
+
+Generate coverage:
+
+```bash
+pnpm test:cov
+```
+
+---
+
+# 🗄 Database & Migrations
+
+VitalisX Backend uses PostgreSQL and Prisma.
+
+### Generate Migration
+
+```bash
+pnpm prisma migrate dev --name migration_name
+```
+
+### Apply Migrations
+
+```bash
+pnpm prisma migrate deploy
+```
+
+### Reset Database
+
+```bash
+pnpm prisma migrate reset
+```
+
+---
+
+# 🌍 API Capabilities
+
+### Patient APIs
+
+* Create patient
+* Update patient
+* Search patients
+* Retrieve health timeline
+
+### Record APIs
+
+* Create diagnosis records
+* Upload treatment records
+* Retrieve medical history
+* Verify record integrity
+
+### Consent APIs
+
+* Grant consent
+* Revoke consent
+* View consent logs
+
+### Prescription APIs
+
+* Create prescriptions
+* Check drug interactions
+* View medication history
+
+### Billing APIs
+
+* Create bills
+* Anchor claims
+* Track payments
+
+### Appointment APIs
+
+* Create appointments
+* Manage schedules
+* Confirm attendance
+
+---
+
+# 🚀 Deployment
+
+Supported deployment platforms:
+
+* AWS
+* Railway
+* Render
+* DigitalOcean
+* Kubernetes
+
+Recommended production services:
+
+* PostgreSQL
+* Redis
+* IPFS Provider
+* Stellar Testnet/Mainnet
+* HashiCorp Vault
+
+---
+
+# 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+
+```bash
+git checkout -b feat/feature-name
+```
+
+3. Commit changes
+4. Sync with latest main branch
+5. Submit a pull request
+
+---
+
+# 📜 Development Standards
+
+* All endpoints must include OpenAPI documentation
+* All consent operations require security review
+* No patient data may be logged in plaintext
+* All blockchain interactions must be audited
+* Critical modules require automated testing
+
+---
+
+# 📄 License
+
+MIT License
+
+---
+
+## VitalisX Backend
+
+Secure. Auditable. Patient-Owned Healthcare Infrastructure Powered by Stellar.

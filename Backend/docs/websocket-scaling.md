@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document describes how WebSocket communication in the Stellara backend
+This document describes how WebSocket communication in the VitalisXbackend
 has been made horizontally scalable using Redis.
 
 The goal is to allow multiple backend instances to serve WebSocket clients
@@ -40,26 +40,27 @@ Backend Instance A ─┐
 Backend Instance B ─┼─ Redis
 Backend Instance C ─┘
 
-
 ---
 
 ## Redis Responsibilities
 
 ### 1. Pub/Sub (WebSocket Events)
+
 - Redis Pub/Sub is used via the Socket.IO Redis adapter
 - Messages emitted on one instance are delivered to all connected clients,
   regardless of which backend instance they are connected to
 - Message ordering is preserved per channel/room
 
 ### 2. Presence State
+
 Presence and room membership are stored centrally in Redis.
 
 #### Key Structure
 
-| Key | Type | Description |
-|----|----|----|
-| `presence:online` | Set | Online user IDs |
-| `room:{roomId}:users` | Set | Users in a room |
+| Key                    | Type   | Description      |
+| ---------------------- | ------ | ---------------- |
+| `presence:online`      | Set    | Online user IDs  |
+| `room:{roomId}:users`  | Set    | Users in a room  |
 | `user:{userId}:socket` | String | Active socket ID |
 
 ---
@@ -67,19 +68,23 @@ Presence and room membership are stored centrally in Redis.
 ## WebSocket Flow
 
 ### Connection
+
 - User connects via WebSocket
 - User presence is stored in Redis
 
 ### Join Room
+
 - User joins a room
 - Room membership is updated in Redis
 - Presence update is broadcast to the room
 
 ### Message Broadcast
+
 - Messages are emitted using Socket.IO
 - Redis adapter ensures delivery across all instances
 
 ### Disconnect
+
 - User presence is removed from Redis
 - Socket mapping is cleaned up
 
@@ -88,6 +93,7 @@ Presence and room membership are stored centrally in Redis.
 ## Horizontal Scaling
 
 Because:
+
 - WebSocket events are propagated via Redis Pub/Sub
 - Presence state is stored in Redis
 - No instance-local state is relied upon
@@ -116,12 +122,15 @@ upstream backend {
 ```
 
 ### Environment Variables
+
 REDIS_URL=redis://localhost:6379
 
 ### Load Testing
+
 WebSocket scaling was validated using simulated concurrent connections.
 
 ### Test Parameters
+
 ~5,000 concurrent WebSocket connections
 Continuous message broadcast to shared rooms
 

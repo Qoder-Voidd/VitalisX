@@ -19,8 +19,10 @@ async function bootstrap() {
 
   // Configure Swagger
   const config = new DocumentBuilder()
-    .setTitle('Stellara API')
-    .setDescription('API for authentication, monitoring Stellar network events, and delivering webhooks')
+    .setTitle('VitalisXAPI')
+    .setDescription(
+      'API for authentication, monitoring Stellar network events, and delivering webhooks',
+    )
     .setVersion('1.0')
     .addTag('Authentication')
     .addTag('Stellar Monitor')
@@ -34,7 +36,6 @@ async function bootstrap() {
 
   app.useWebSocketAdapter(redisIoAdapter);
   app.useGlobalGuards(app.get(ThrottleGuard));
-
 
   await app.listen(process.env.PORT ?? 3000);
 }
