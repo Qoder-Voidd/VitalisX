@@ -2,6 +2,7 @@ import Image from "next/image";
 
 export default function HumanMeetsAi() {
     return (
+        //article
         <article className="flex flex-col  justify-center w-full items-center px-6 ">
             <section className="pl-4 pt-1 bg-[#4D4C4C33] max-w-7xl rounded-4xl relative  sm:flex sm:items-center sm:justify-between w-full sm:gap-5 border-[#4D4C4C] border top-20">
                 <h2 className="font-serif text-3xl sm:text-4xl lg:text-[3.25rem] lg:leading-[1.15] font-light leading-tight tracking-tight text-white my-5 absolute -top-25">
@@ -23,6 +24,7 @@ export default function HumanMeetsAi() {
                         <q>Your AI Mentor. Your Blockchain. Your Edge.</q>
                     </p>
                 </div>
+                //image
                 <Image
                     src="/images/humanRobotConnect.png"
                     alt="networks"
