@@ -11,6 +11,7 @@ export class AiCacheService {
     @Inject('REDIS_CLIENT') private readonly redis: Redis | null,
   ) {}
 
+  //redis
   async get(key: string): Promise<string | null> {
     if (this.redis) {
       return this.redis.get(key);
