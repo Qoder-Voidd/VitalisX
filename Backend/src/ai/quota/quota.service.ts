@@ -7,6 +7,7 @@ interface QuotaRecord {
 
 @Injectable()
 export class QuotaService {
+  //max request
   private readonly MAX_REQUESTS = 1000;
   private quotas = new Map<string, QuotaRecord>();
 
