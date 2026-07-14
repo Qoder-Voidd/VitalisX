@@ -5,6 +5,7 @@ import Inspired from "./components/Inspired";
 export default function Home() {
     return (
         <>
+        //navbar and hero section
             <Navbar />
             <Hero />
         </>
