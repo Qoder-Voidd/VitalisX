@@ -16,6 +16,7 @@ export default function LearningSection() {
             next generation of crypto users.
           </p>
         </div>
+        //image
         <Image
           src="/images/learning.png"
           alt="networks"
